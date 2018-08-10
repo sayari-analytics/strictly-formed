@@ -9,6 +9,9 @@ type Props = {
   value: number | null
   className?: string
   placeholder?: string
+  min?: number
+  max?: number
+  step?: number
   onChange: (value: number | null) => void
   onSubmit?: (value: number | null) => void
   onClear?: () => void
@@ -43,6 +46,9 @@ class NumberInput extends PureComponent<Props> {
         type="number"
         className={this.props.className}
         placeholder={this.props.placeholder}
+        min={this.props.min}
+        max={this.props.max}
+        step={this.props.step}
         tabIndex={0}
         onKeyDown={this.onKeyDown}
         onChange={this.onChange}
