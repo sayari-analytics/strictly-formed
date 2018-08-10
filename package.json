@@ -1,0 +1,32 @@
+{
+  "name": "strictly-formed",
+  "version": "0.0.1",
+  "description": "statically typed forms for typescript",
+  "main": "src/index.ts",
+  "scripts": {
+    "test": "npm run test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/sayari-analytics/strictly-formed.git"
+  },
+  "keywords": [
+    "typescript",
+    "react",
+    "form"
+  ],
+  "peerDependencies": {
+    "react": "16.x"
+  },
+  "author": "James Conkling <james.lane.conkling@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sayari-analytics/strictly-formed/issues"
+  },
+  "homepage": "https://github.com/sayari-analytics/strictly-formed#readme",
+  "devDependencies": {
+    "@types/react": "^16.4.9",
+    "react": "^16.4.2",
+    "typescript": "^3.0.1"
+  }
+}
