@@ -4,7 +4,9 @@
   "description": "statically typed forms for typescript",
   "main": "src/index.ts",
   "scripts": {
-    "test": "npm run test"
+    "clean": "rm -rf ./dist",
+    "build": "npm run clean && tsc",
+    "test": "node test/"
   },
   "repository": {
     "type": "git",
