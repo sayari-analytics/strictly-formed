@@ -2,7 +2,8 @@
   "name": "strictly-formed",
   "version": "0.0.1",
   "description": "statically typed forms for typescript",
-  "main": "src/index.ts",
+  "main": "dist/index.ts",
+  "typings": "dist/index.d.ts",
   "scripts": {
     "clean": "rm -rf ./dist",
     "build": "npm run clean && tsc",
