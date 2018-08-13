@@ -15,7 +15,7 @@ type Props<Option> = {
 
 
 class Select<Option extends string> extends PureComponent<Props<Option>> {
-  onChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) => this.props.onChange(value === '' ? null : value as Option)
+  onChange = ({ target: { value } }: ChangeEvent<HTMLSelectElement>) => this.props.onChange(value === '' ? null : value as Option)
 
   render() {
     return (
@@ -23,13 +23,14 @@ class Select<Option extends string> extends PureComponent<Props<Option>> {
         value={this.props.value === null ? '' : this.props.value}
         className={this.props.className}
         placeholder={this.props.placeholder}
+        onChange={this.onChange}
       >
         {
           this.props.nullable && <option value="" />
         }
 
         {
-          !this.props.nullable && this.props.options.indexOf(this.props.value as Option) === -1 &&
+          this.props.options.indexOf(this.props.value as Option) === -1 &&
             <option
               value={this.props.value || ''}
               disabled={true}

@@ -19,7 +19,7 @@ class StringInput extends PureComponent<Props> {
 
   // TODO - allow onKeyDown to be extended via incomming props,
   // so strictly-formed is composable with withHotKeys 
-  onKeyDown(e: KeyboardEvent<HTMLInputElement>) {
+  onKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (this.props.value === null || this.props.value === '') {
       return;
     } else if (e.which === 13) {
