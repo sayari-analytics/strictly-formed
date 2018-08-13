@@ -1,41 +1,21 @@
 import React, {
   PureComponent,
   ChangeEvent,
-  KeyboardEvent
 } from 'react';
 
 
-type Props = {
-  value: string | null // TODO - expand to other primitive types
-  options: string[]
+type Props<Option> = {
+  value: string | null
+  options: Option[] // can options be an enum: enum{ key1 = 'label one', key2 = 'label two' }
   className?: string
   placeholder?: string
-  onChange: (value: string | null) => void
-  onSubmit?: (value: string | null) => void
-  onClear?: () => void
+  nullable?: boolean
+  onChange: (value: Option | null) => void
 }
 
-class Select extends PureComponent<Props> {
-  onChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) => this.props.onChange(value === '' ? null : value)
 
-  // TODO - allow onKeyDown to be extended via incomming props,
-  // so strictly-formed is composable with withHotKeys 
-  onKeyDown(e: KeyboardEvent<HTMLInputElement>) {
-    if (this.props.value === null || this.props.value === '') {
-      return;
-    } else if (e.which === 13) {
-      // enter key
-      e.preventDefault();
-      e.stopPropagation();
-      // TODO - typecast to String Literal Type
-      this.props.onSubmit && this.props.onSubmit(this.props.value);
-    } else if (e.which === 27) {
-      // esc key
-      e.preventDefault();
-      e.stopPropagation();
-      this.props.onClear && this.props.onClear();
-    }
-  }
+class Select<Option extends string> extends PureComponent<Props<Option>> {
+  onChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) => this.props.onChange(value === '' ? null : value as Option)
 
   render() {
     return (
@@ -45,7 +25,11 @@ class Select extends PureComponent<Props> {
         placeholder={this.props.placeholder}
       >
         {
-          (this.props.value === null || this.props.options.indexOf(this.props.value)) &&
+          this.props.nullable && <option value="" />
+        }
+
+        {
+          !this.props.nullable && this.props.options.indexOf(this.props.value as Option) === -1 &&
             <option
               value={this.props.value || ''}
               disabled={true}
