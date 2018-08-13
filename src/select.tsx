@@ -2,6 +2,7 @@ import React, {
   PureComponent,
   ChangeEvent,
 } from 'react';
+import { defaultTo } from './utils';
 
 
 type Props<Option> = {
@@ -20,7 +21,7 @@ class Select<Option extends string> extends PureComponent<Props<Option>> {
   render() {
     return (
       <select
-        value={this.props.value === null ? '' : this.props.value}
+        value={defaultTo('', this.props.value)}
         className={this.props.className}
         placeholder={this.props.placeholder}
         onChange={this.onChange}
