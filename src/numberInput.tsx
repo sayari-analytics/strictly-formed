@@ -26,7 +26,9 @@ class NumberInput extends PureComponent<Props> {
   // TODO - allow onKeyDown to be extended via incomming props,
   // so strictly-formed is composable with withHotKeys 
   onKeyDown(e: KeyboardEvent<HTMLInputElement>) {
-    if (e.which === 13) {
+    if (this.props.value === null) {
+      return;
+    } else if (e.which === 13) {
       // enter key
       e.preventDefault();
       e.stopPropagation();
