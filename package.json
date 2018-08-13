@@ -7,7 +7,10 @@
   "scripts": {
     "clean": "rm -rf ./dist",
     "build": "npm run clean && tsc",
-    "test": "node test/"
+    "test": "node test/",
+    "deploy:patch": "npm test && npm version patch && npm run build && npm publish",
+    "deploy:minor": "npm test && npm version minor && npm run build && npm publish",
+    "deploy:major": "npm test && npm version major && npm run build && npm publish"
   },
   "repository": {
     "type": "git",
