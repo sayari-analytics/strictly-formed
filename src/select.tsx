@@ -6,22 +6,22 @@ import { defaultTo } from './utils';
 
 
 type Props<Option> = {
-  value: string | null
+  value: string | undefined
   options: Option[] // can options be an enum: enum{ key1 = 'label one', key2 = 'label two' }
   className?: string
   placeholder?: string
   nullable?: boolean
-  onChange: (value: Option | null) => void
+  onChange: (value: Option | undefined) => void
 }
 
 
 class Select<Option extends string> extends PureComponent<Props<Option>> {
-  onChange = ({ target: { value } }: ChangeEvent<HTMLSelectElement>) => this.props.onChange(value === '' ? null : value as Option)
+  onChange = ({ target: { value } }: ChangeEvent<HTMLSelectElement>) => this.props.onChange(value === '' ? undefined : value as Option)
 
   render() {
     return (
       <select
-        value={defaultTo('', this.props.value)}
+        value={this.props.value === undefined ? '' : this.props.value}
         className={this.props.className}
         placeholder={this.props.placeholder}
         onChange={this.onChange}

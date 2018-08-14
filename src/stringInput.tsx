@@ -3,40 +3,36 @@ import React, {
   ChangeEvent,
   KeyboardEvent
 } from 'react';
-import { defaultTo, isNil } from './utils';
 
 
 type Props = {
-  value: string | null
+  value: string | undefined
   className?: string
   placeholder?: string
-  onChange: (value: string | null) => void
-  onSubmit?: (value: string | null) => void
+  onChange: (value: string | undefined) => void
+  onSubmit?: (value: string | undefined) => void
   onClear?: () => void
 }
 
 class StringInput extends PureComponent<Props> {
-  onChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) => this.props.onChange(value === '' ? null : value)
+  onChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) => this.props.onChange(value === '' ? undefined : value)
 
   // TODO - allow onKeyDown to be extended via incomming props,
   // so strictly-formed is composable with withHotKeys 
   onKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (isNil(this.props.value)) {
-      return;
-    } else if (e.which === 13) {
-      // enter key
-      this.props.onSubmit && this.props.onSubmit(this.props.value);
-    } else if (e.which === 27) {
+    if (e.which === 27) {
       // esc key
       this.props.onClear && this.props.onClear();
+    } else if (e.which === 13 && this.props.value !== undefined) {
+      // enter key
+      this.props.onSubmit && this.props.onSubmit(this.props.value);
     }
   }
 
   render() {
     return (
       <input
-        // TODO - will placeholder display w/ ''?  if not, should these take undefined | string?
-        value={defaultTo('', this.props.value)}
+        value={this.props.value === undefined ? '' : this.props.value}
         type="string"
         className={this.props.className}
         placeholder={this.props.placeholder}

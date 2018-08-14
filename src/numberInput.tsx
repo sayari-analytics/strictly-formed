@@ -3,45 +3,42 @@ import React, {
   ChangeEvent,
   KeyboardEvent
 } from 'react';
-import { defaultTo, isNil } from './utils';
 
 
 type Props = {
-  value: number | null
+  value: number | undefined
   className?: string
   placeholder?: string
   min?: number
   max?: number
   step?: number
-  onChange: (value: number | null) => void
-  onSubmit?: (value: number | null) => void
+  onChange: (value: number | undefined) => void
+  onSubmit?: (value: number | undefined) => void
   onClear?: () => void
 }
 
 class NumberInput extends PureComponent<Props> {
   onChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
     const numberValue = parseFloat(value);
-    this.props.onChange(isNaN(numberValue) ? null : numberValue);
+    this.props.onChange(isNaN(numberValue) ? undefined : numberValue);
   }
 
   // TODO - allow onKeyDown to be extended via incomming props,
   // so strictly-formed is composable with withHotKeys 
   onKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (isNil(this.props.value)) {
-      return;
-    } else if (e.which === 13) {
-      // enter key
-      this.props.onSubmit && this.props.onSubmit(this.props.value);
-    } else if (e.which === 27) {
+    if (e.which === 27) {
       // esc key
       this.props.onClear && this.props.onClear();
+    } else if (e.which === 13 && this.props.value !== undefined) {
+      // enter key
+      this.props.onSubmit && this.props.onSubmit(this.props.value);
     }
   }
 
   render() {
     return (
       <input
-        value={defaultTo('', this.props.value)}
+        value={this.props.value === undefined ? '' : this.props.value}
         type="number"
         className={this.props.className}
         placeholder={this.props.placeholder}
