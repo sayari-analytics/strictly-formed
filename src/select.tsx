@@ -4,7 +4,7 @@ import React, {
 } from 'react';
 
 
-type Props<Option> = {
+export type Props<Option> = {
   value: string | undefined
   options: Option[] // can options be an enum: enum{ key1 = 'label one', key2 = 'label two' }
   className?: string

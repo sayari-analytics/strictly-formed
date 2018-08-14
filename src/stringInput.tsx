@@ -5,7 +5,7 @@ import React, {
 } from 'react';
 
 
-type Props = {
+export type Props = {
   value: string | undefined
   className?: string
   placeholder?: string
