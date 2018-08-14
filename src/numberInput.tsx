@@ -18,24 +18,24 @@ type Props = {
 }
 
 class NumberInput extends PureComponent<Props> {
-  onChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
+  private onChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
     const numberValue = parseFloat(value);
     this.props.onChange(isNaN(numberValue) ? undefined : numberValue);
   }
 
   // TODO - allow onKeyDown to be extended via incomming props,
   // so strictly-formed is composable with withHotKeys 
-  onKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.which === 27) {
+  private onKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.which === 27 && this.props.onClear) {
       // esc key
-      this.props.onClear && this.props.onClear();
-    } else if (e.which === 13 && this.props.value !== undefined) {
+      this.props.onClear();
+    } else if (e.which === 13 && this.props.value !== undefined && this.props.onSubmit) {
       // enter key
-      this.props.onSubmit && this.props.onSubmit(this.props.value);
+      this.props.onSubmit(this.props.value);
     }
   }
 
-  render() {
+  public render() {
     return (
       <input
         value={this.props.value === undefined ? '' : this.props.value}

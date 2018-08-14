@@ -2,7 +2,6 @@ import React, {
   PureComponent,
   ChangeEvent,
 } from 'react';
-import { defaultTo } from './utils';
 
 
 type Props<Option> = {
@@ -16,9 +15,9 @@ type Props<Option> = {
 
 
 class Select<Option extends string> extends PureComponent<Props<Option>> {
-  onChange = ({ target: { value } }: ChangeEvent<HTMLSelectElement>) => this.props.onChange(value === '' ? undefined : value as Option)
+  private onChange = ({ target: { value } }: ChangeEvent<HTMLSelectElement>) => this.props.onChange(value === '' ? undefined : value as Option)
 
-  render() {
+  public render() {
     return (
       <select
         value={this.props.value === undefined ? '' : this.props.value}
