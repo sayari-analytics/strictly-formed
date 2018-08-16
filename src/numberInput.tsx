@@ -1,7 +1,10 @@
 import React, {
   PureComponent,
   ChangeEvent,
-  KeyboardEvent
+  KeyboardEvent,
+  FocusEvent,
+  Ref,
+  forwardRef
 } from 'react';
 
 
@@ -12,9 +15,13 @@ export type Props = {
   min?: number
   max?: number
   step?: number
+  forwardedRef?: Ref<HTMLInputElement>
   onChange: (value: number | undefined) => void
   onSubmit?: (value: number | undefined) => void
   onClear?: () => void
+  onKeyDown?: (e: KeyboardEvent<HTMLInputElement>) => void
+  onFocus?: (e: FocusEvent<HTMLInputElement>) => void
+  onBlur?: (e: FocusEvent<HTMLInputElement>) => void
 }
 
 class NumberInput extends PureComponent<Props> {
@@ -23,10 +30,10 @@ class NumberInput extends PureComponent<Props> {
     this.props.onChange(isNaN(numberValue) ? undefined : numberValue);
   }
 
-  // TODO - allow onKeyDown to be extended via incomming props,
-  // so strictly-formed is composable with withHotKeys 
   private onKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.which === 27 && this.props.onClear) {
+    if (this.props.onKeyDown) {
+      this.props.onKeyDown(e);
+    } else if (e.which === 27 && this.props.onClear) {
       // esc key
       this.props.onClear();
     } else if (e.which === 13 && this.props.value !== undefined && this.props.onSubmit) {
@@ -46,12 +53,17 @@ class NumberInput extends PureComponent<Props> {
         max={this.props.max}
         step={this.props.step}
         tabIndex={0}
+        ref={this.props.forwardedRef}
         onKeyDown={this.onKeyDown}
         onChange={this.onChange}
+        onFocus={this.props.onFocus}
+        onBlur={this.props.onBlur}
       />
     );
   }
 }
 
 
-export default NumberInput;
+export default forwardRef<HTMLInputElement, Props>((props, ref) => (
+  <NumberInput {...props} forwardedRef={ref} />
+));

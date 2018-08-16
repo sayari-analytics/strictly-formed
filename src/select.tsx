@@ -1,6 +1,9 @@
 import React, {
   PureComponent,
   ChangeEvent,
+  KeyboardEvent,
+  FocusEvent,
+  Ref,
 } from 'react';
 
 
@@ -10,12 +13,22 @@ export type Props<Option> = {
   className?: string
   placeholder?: string
   nullable?: boolean
+  // forwardedRef?: Ref<HTMLSelectElement>
   onChange: (value: Option | undefined) => void
+  onKeyDown?: (e: KeyboardEvent<HTMLSelectElement>) => void
+  onFocus?: (e: FocusEvent<HTMLSelectElement>) => void
+  onBlur?: (e: FocusEvent<HTMLSelectElement>) => void
 }
 
 
 class Select<Option extends string> extends PureComponent<Props<Option>> {
   private onChange = ({ target: { value } }: ChangeEvent<HTMLSelectElement>) => this.props.onChange(value === '' ? undefined : value as Option)
+
+  private onKeyDown = (e: KeyboardEvent<HTMLSelectElement>) => {
+    if (this.props.onKeyDown) {
+      this.props.onKeyDown(e);
+    }
+  }
 
   public render() {
     return (
@@ -23,7 +36,12 @@ class Select<Option extends string> extends PureComponent<Props<Option>> {
         value={this.props.value === undefined ? '' : this.props.value}
         className={this.props.className}
         placeholder={this.props.placeholder}
+        tabIndex={0}
+        // ref={this.props.forwardedRef}
+        onKeyDown={this.onKeyDown}
         onChange={this.onChange}
+        onFocus={this.props.onFocus}
+        onBlur={this.props.onBlur}
       >
         {
           this.props.nullable && <option value="" />
@@ -53,4 +71,5 @@ class Select<Option extends string> extends PureComponent<Props<Option>> {
 }
 
 
+// TODO - how to use forwardRef w/ generic components
 export default Select;
