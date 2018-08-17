@@ -3,6 +3,7 @@ import React, {
   ChangeEvent,
   KeyboardEvent,
   FocusEvent,
+  Ref,
 } from 'react';
 
 
@@ -12,7 +13,7 @@ export type Props<Option> = {
   className?: string
   placeholder?: string
   nullable?: boolean
-  // forwardedRef?: Ref<HTMLSelectElement>
+  forwardedRef?: Ref<HTMLSelectElement>
   onChange: (value: Option) => void
   onClear?: () => void
   onKeyDown?: (e: KeyboardEvent<HTMLSelectElement>) => void
@@ -41,7 +42,7 @@ class Select<Option extends string> extends PureComponent<Props<Option>> {
         className={this.props.className}
         placeholder={this.props.placeholder}
         tabIndex={0}
-        // ref={this.props.forwardedRef}
+        ref={this.props.forwardedRef}
         onKeyDown={this.onKeyDown}
         onChange={this.onChange}
         onFocus={this.props.onFocus}
@@ -75,5 +76,24 @@ class Select<Option extends string> extends PureComponent<Props<Option>> {
 }
 
 
-// TODO - how to use forwardRef w/ generic components
 export default Select;
+
+// how to use forwardRef w/ generic components
+/* tslint:disablexxx */
+// generic Option type on Select set to string
+// see https://github.com/Microsoft/TypeScript/issues/9366
+// const forwardRefSelectWrapper = <Option extends string>(props: Props<Option>, ref?: Ref<HTMLSelectElement>) =>
+//   <Select {...props} forwardedRef={ref} />
+
+// export const S1 = forwardRef(forwardRefSelectWrapper);
+
+// export const S2 = forwardRef(<Option extends string>(props: Props<Option>, ref?: Ref<HTMLSelectElement>) =>
+//   <Select<Option> {...props} forwardedRef={ref} />);
+
+// const s2OnChange: (value: 'one' | 'two') => void = (value) => console.log(value);
+
+// <S2<'one' | 'two'>
+//   value="a"
+//   options={['one', 'two']}
+//   onChange={s2OnChange}
+// />

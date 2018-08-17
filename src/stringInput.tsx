@@ -2,7 +2,6 @@ import React, {
   PureComponent,
   ChangeEvent,
   KeyboardEvent,
-  forwardRef,
   Ref,
   FocusEvent,
 } from 'react';
@@ -55,6 +54,4 @@ class StringInput extends PureComponent<Props> {
 }
 
 
-export default forwardRef<HTMLInputElement, Props>((props, ref) => (
-  <StringInput {...props} forwardedRef={ref} />
-));
+export default StringInput;

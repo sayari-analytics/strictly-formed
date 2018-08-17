@@ -4,7 +4,6 @@ import React, {
   KeyboardEvent,
   FocusEvent,
   Ref,
-  forwardRef
 } from 'react';
 
 
@@ -64,6 +63,4 @@ class NumberInput extends PureComponent<Props> {
 }
 
 
-export default forwardRef<HTMLInputElement, Props>((props, ref) => (
-  <NumberInput {...props} forwardedRef={ref} />
-));
+export default NumberInput;
