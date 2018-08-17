@@ -3,7 +3,6 @@ import React, {
   ChangeEvent,
   KeyboardEvent,
   FocusEvent,
-  Ref,
 } from 'react';
 
 
@@ -14,7 +13,8 @@ export type Props<Option> = {
   placeholder?: string
   nullable?: boolean
   // forwardedRef?: Ref<HTMLSelectElement>
-  onChange: (value: Option | undefined) => void
+  onChange: (value: Option) => void
+  onClear?: () => void
   onKeyDown?: (e: KeyboardEvent<HTMLSelectElement>) => void
   onFocus?: (e: FocusEvent<HTMLSelectElement>) => void
   onBlur?: (e: FocusEvent<HTMLSelectElement>) => void
@@ -22,12 +22,16 @@ export type Props<Option> = {
 
 
 class Select<Option extends string> extends PureComponent<Props<Option>> {
-  private onChange = ({ target: { value } }: ChangeEvent<HTMLSelectElement>) => this.props.onChange(value === '' ? undefined : value as Option)
+  private onChange = ({ target: { value } }: ChangeEvent<HTMLSelectElement>) => this.props.onChange(value as Option)
 
   private onKeyDown = (e: KeyboardEvent<HTMLSelectElement>) => {
     if (this.props.onKeyDown) {
       this.props.onKeyDown(e);
+    } else if (e.which === 27 && this.props.onClear) {
+      // esc key
+       this.props.onClear();
     }
+    // no implementation for onSubmit, as change event is the same as submit for select element
   }
 
   public render() {
