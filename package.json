@@ -10,9 +10,9 @@
     "lint": "tslint --config ./tslint.json --project ./tsconfig.json --format stylish",
     "test": "node test/",
     "validate": "npm run lint && npm run test",
-    "deploy:patch": "npm run validate && npm version patch && npm run build && npm publish",
-    "deploy:minor": "npm run validate && npm version minor && npm run build && npm publish",
-    "deploy:major": "npm run validate && npm version major && npm run build && npm publish"
+    "deploy:patch": "npm run validate && npm version patch && npm run build && npm publish && git push --follow-tags",
+    "deploy:minor": "npm run validate && npm version minor && npm run build && npm publish && git push --follow-tags",
+    "deploy:major": "npm run validate && npm version major && npm run build && npm publish && git push --follow-tags"
   },
   "repository": {
     "type": "git",
