@@ -11,6 +11,7 @@ export type Props = {
   value: number | undefined
   className?: string
   placeholder?: string
+  disabled?: boolean
   min?: number
   max?: number
   step?: number
@@ -48,6 +49,7 @@ class NumberInput extends PureComponent<Props> {
         type="number"
         className={this.props.className}
         placeholder={this.props.placeholder}
+        disabled={this.props.disabled}
         min={this.props.min}
         max={this.props.max}
         step={this.props.step}

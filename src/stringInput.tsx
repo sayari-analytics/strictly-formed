@@ -11,6 +11,7 @@ export type Props = {
   value: string | undefined
   className?: string
   placeholder?: string
+  disabled?: boolean
   forwardedRef?: Ref<HTMLInputElement>
   onChange: (value: string | undefined) => void
   onSubmit?: (value: string | undefined) => void
@@ -42,6 +43,7 @@ class StringInput extends PureComponent<Props> {
         type="string"
         className={this.props.className}
         placeholder={this.props.placeholder}
+        disabled={this.props.disabled}
         tabIndex={0}
         ref={this.props.forwardedRef}
         onKeyDown={this.onKeyDown}

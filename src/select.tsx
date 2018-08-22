@@ -12,6 +12,7 @@ export type Props<Option> = {
   options: Option[] // can options be an enum: enum{ key1 = 'label one', key2 = 'label two' }
   className?: string
   placeholder?: string
+  disabled?: boolean
   nullable?: boolean
   forwardedRef?: Ref<HTMLSelectElement>
   onChange: (value: Option) => void
@@ -41,6 +42,7 @@ class Select<Option extends string> extends PureComponent<Props<Option>> {
         value={this.props.value === undefined ? '' : this.props.value}
         className={this.props.className}
         placeholder={this.props.placeholder}
+        disabled={this.props.disabled}
         tabIndex={0}
         ref={this.props.forwardedRef}
         onKeyDown={this.onKeyDown}
