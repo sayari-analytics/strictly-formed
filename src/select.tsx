@@ -24,6 +24,7 @@ export type Props<Option> = {
 
 
 class Select<Option extends string> extends PureComponent<Props<Option>> {
+  // TODO - can we ensure that value is always of type Option
   private onChange = ({ target: { value } }: ChangeEvent<HTMLSelectElement>) => this.props.onChange(value as Option)
 
   private onKeyDown = (e: KeyboardEvent<HTMLSelectElement>) => {
@@ -50,14 +51,17 @@ class Select<Option extends string> extends PureComponent<Props<Option>> {
         onFocus={this.props.onFocus}
         onBlur={this.props.onBlur}
       >
-        {
-          this.props.nullable && <option value="" />
-        }
+        <option
+          value=""
+          disabled={!this.props.nullable}
+        >
+          {this.props.placeholder}
+        </option>
 
         {
-          this.props.options.indexOf(this.props.value as Option) === -1 &&
+          this.props.value !== undefined && this.props.options.indexOf(this.props.value as Option) === -1 &&
             <option
-              value={this.props.value || ''}
+              value={this.props.value}
               disabled={true}
             >
               {this.props.value}
