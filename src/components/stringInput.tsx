@@ -2,8 +2,8 @@ import React, {
   PureComponent,
   ChangeEvent,
   KeyboardEvent,
-  Ref,
   FocusEvent,
+  Ref,
 } from 'react';
 
 
