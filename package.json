@@ -6,6 +6,7 @@
   "typings": "dist/index.d.ts",
   "scripts": {
     "clean": "rm -rf ./dist",
+    "dev": "npm run clean && tsc --watch",
     "build": "npm run clean && tsc",
     "lint": "tslint --config ./tslint.json --project ./tsconfig.json --format stylish",
     "test": "node test/",
@@ -33,11 +34,19 @@
   },
   "homepage": "https://github.com/sayari-analytics/strictly-formed#readme",
   "devDependencies": {
+    "@types/ramda": "^0.25.39",
     "@types/react": "^16.4.9",
+    "@types/react-redux": "^6.0.9",
+    "@types/recompose": "^0.27.0",
     "react": "^16.4.2",
     "tslint": "^5.11.0",
     "tslint-config-prettier": "^1.14.0",
     "tslint-react": "^3.6.0",
     "typescript": "^3.0.1"
+  },
+  "dependencies": {
+    "ramda": "^0.25.0",
+    "react-redux": "^5.0.7",
+    "recompose": "^0.30.0"
   }
 }
