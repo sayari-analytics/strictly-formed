@@ -1,6 +1,6 @@
 {
   "name": "strictly-formed",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "statically typed forms for typescript",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
