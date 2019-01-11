@@ -9,7 +9,7 @@ import { getForm, getFormStatus, getFormError, clearForm, updateForm } from '../
 
 
 /* utils */
-export type FormProps<Form> = {
+export type FormProps<Form extends AbstractForm> = {
   formId: string
   form: Form
   status: Status
@@ -17,13 +17,13 @@ export type FormProps<Form> = {
 }
 
 
-export type FormHandler<Form> = {
+export type FormHandler<Form extends AbstractForm> = {
   setForm: (props: Partial<Form>) => void
   clearForm: () => void
 };
 
 
-export type WithForm<Form> = FormProps<Form> & FormHandler<Form>
+export type WithForm<Form extends AbstractForm> = FormProps<Form> & FormHandler<Form>
 
 
 /* inject FormProps */
@@ -76,8 +76,7 @@ export const withReduxFormHandlers = () => <OutterProps extends FormProps<Form>,
     }
 
     private setForm = (form: Partial<Form>) => this.context.store.dispatch(updateForm({
-      formId: this.props.formId,
-      form: merge(this.props.form, form),
+      formId: this.props.formId, form,
     }))
 
     private clearForm = () => this.context.store.dispatch(clearForm({ formId: this.props.formId }))

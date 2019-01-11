@@ -5,8 +5,11 @@ import {
   dissocPath,
   pathOr,
   path,
+  over,
+  lensPath,
 } from 'ramda';
 import { Status, FormStateMap, AbstractForm } from '../types';
+import { mergeLeft } from '../utils';
 
 
 /* types */
@@ -50,7 +53,7 @@ export const SUBMIT_FORM_ERROR = 'SUBMIT_FORM_ERROR';
 /* action creators */
 export const updateForm: ActionCreator<
   typeof UPDATE_FORM,
-  { formId: string, form: any }
+  { formId: string, form: AbstractForm }
 > = (props) => ({ type: UPDATE_FORM, props });
 export type UpdateFormAction = ReturnType<typeof updateForm>
 
@@ -87,7 +90,7 @@ const reducer: Reducer<FormStateMap, FormAction> = (
 ) => {
   if (action.type === UPDATE_FORM) {
     return pipe<FormStateMap, FormStateMap, FormStateMap, FormStateMap>(
-      assocPath([action.props.formId, 'form'], action.props.form),
+      over(lensPath([action.props.formId, 'form']), mergeLeft(action.props.form)),
       assocPath([action.props.formId, 'status'], 'complete'),
       dissocPath([action.props.formId, 'error']),
     )(state);
