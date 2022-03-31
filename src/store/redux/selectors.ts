@@ -1,46 +1,28 @@
-import type { FormStateMap, AbstractForm } from '~/src/types'
+import type { FormStateMap, AbstractForm, Status } from '~/src/types'
 import { path, pathOr } from 'ramda'
 
 // SELECTORS
 export const getForm = <
-  State extends FormStateMap = FormStateMap,
-  Form extends AbstractForm = AbstractForm
+  Form extends AbstractForm = AbstractForm,
+  State extends FormStateMap = FormStateMap
 >(
   state: State,
   formId: string,
   defaultForm: Form
-) => {
-  if (state.formState[formId] === undefined) {
-    return defaultForm
-  } else {
-    return Object.entries(state.formState[formId].fields).reduce<AbstractForm>(
-      (acc, [name, field]) => {
-        acc[name] = field.value
-        return acc
-      },
-      {}
-    ) as Form
-  }
-}
+): Form => pathOr(defaultForm, ['formState', formId, 'form'], state)
 
 export const getFormStatus = <State extends FormStateMap = FormStateMap>(
   state: State,
   formId: string
-) => pathOr('complete', ['formState', formId, 'status'], state)
+): Status => pathOr('complete', ['formState', formId, 'status'], state)
 
 export const getFormError = <State extends FormStateMap = FormStateMap>(
   state: State,
   formId: string
 ): string | undefined => path(['formState', formId, 'error'], state)
 
-export const getInputValue = <State extends FormStateMap = FormStateMap>(
+export const getField = <State extends FormStateMap = FormStateMap>(
   state: State,
   formId: string,
-  name: string
-) => {
-  const form = state.formState[formId]
-  if (form === undefined || form.fields[name] === undefined) {
-    return ''
-  }
-  return form.fields[name].value
-}
+  field: string
+) => path([formId, 'form', field], state)

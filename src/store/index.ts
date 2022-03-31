@@ -1,22 +1,18 @@
 export {
   clearForm,
-  submitForm,
   updateForm,
-  submitFormError,
-  submitFormSuccess,
+  setFormStatus,
+  setFieldValue,
 } from './redux/actions'
 
+export { CLEAR_FORM, UPDATE_FORM, SET_FORM_STATUS } from './redux/constants'
+
 export {
-  CLEAR_FORM,
-  UPDATE_FORM,
-  SUBMIT_FORM,
-  SUBMIT_FORM_ERROR,
-  SUBMIT_FORM_SUCCESS,
-} from './redux/constants'
-
-export { getForm, getFormError, getFormStatus } from './redux/selectors'
-
-export { formMiddleware } from './redux/middleware'
+  getForm,
+  getFormError,
+  getFormStatus,
+  getField,
+} from './redux/selectors'
 
 export { formReducer } from './redux/reducer'
 

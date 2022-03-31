@@ -1,31 +1,50 @@
 /* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import React, { FunctionComponent } from 'react'
-import { useForm, useInputField } from '../../src/index'
+import React, { FunctionComponent, useCallback } from 'react'
+import { useForm } from '~/src/hooks/useForm'
 
 interface Props {
-  formId?: string
+  formId: string
+}
+
+const defaultForm = {
+  input: '',
 }
 
 const Form: FunctionComponent<Props> = ({ formId }) => {
   const [header, setHeader] = React.useState('')
-  const { ref, value, onChange } = useInputField(formId, 'input')
-  const { form, submit } = useForm({
+  const { form, status, setField, setStatus, clearForm } = useForm(
     formId,
-    defaultForm: { input: '' },
-    onSubmit: async (form: { input: string }) => {
-      return await setTimeout(() => {
+    defaultForm
+  )
+
+  const onChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      setField('input', event.target.value)
+    },
+    [setField]
+  )
+
+  const onSubmit = useCallback(
+    (event: React.SyntheticEvent) => {
+      event.preventDefault()
+      setStatus('pending')
+      setTimeout(() => {
         setHeader(form.input)
+        setStatus('complete')
+        clearForm()
       }, 1000)
     },
-  })
+    [setStatus, clearForm, form.input]
+  )
 
   return (
     <div>
       <h1>{header}</h1>
+      <h3 style={{ color: 'darkgray' }}>{status}</h3>
       <pre>{JSON.stringify(form)}</pre>
-      <form onSubmit={submit}>
-        <input ref={ref} value={value} onChange={onChange} />
+      <form onSubmit={onSubmit}>
+        <input value={form.input} onChange={onChange} />
         <button type='submit'>SUBMIT</button>
       </form>
     </div>

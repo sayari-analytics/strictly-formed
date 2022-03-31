@@ -1,34 +1,24 @@
-// Primitive
+// Redux
 export type Status = 'complete' | 'pending' | 'error'
 
-export type Value = string | number | boolean | undefined | Set<string>
-
-// Redux
 export type AbstractForm = { [name: string]: unknown }
 
-export interface FormData<Form extends AbstractForm = AbstractForm> {
+export type FormData<Form extends AbstractForm = AbstractForm> = {
   status: Status
   error?: string
-  fields: {
-    [name: string]: Field
-  }
+  form: Form
 }
 
-export interface FormState {
+export type FormState = {
   [formId: string]: FormData
 }
 
-export interface FormStateMap {
+export type FormStateMap = {
   formState: FormState
 }
 
 // Fields
-export type Field = AbstractField | InputField | SelectField
-
-export interface AbstractField<Value = unknown> {
-  value: Value
-}
-
+// Input
 export type InputField = TextInput | NumberInput | CheckedInput
 
 export interface TextInput {
@@ -49,11 +39,34 @@ export interface CheckedInput {
   value: boolean
 }
 
-export type SelectField = unknown
+// Select
+export type SelectField<Opt extends Option = Option> =
+  | SingleSelect<Opt>
+  | MultipleSelect<Opt>
 
-export interface SingleSelect {
+export type SelectOption<Opt extends Option = Option> = Opt | OptionGroup<Opt>
+
+export type Option = {
+  id: string
+  label: string
+}
+
+export type OptionGroup<Opt extends Option> = {
+  id: string
+  label: string
+  children: Opt[]
+}
+
+export type SingleSelect<Opt extends Option> = {
   field: 'select'
   multiple: false
   value: string
-  options: unknown //
+  options: SelectOption<Opt>
+}
+
+export type MultipleSelect<Opt extends Option> = {
+  field: 'select'
+  multiple: true
+  value: Set<string>
+  options: SelectOption<Opt>
 }

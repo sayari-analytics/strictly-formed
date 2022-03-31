@@ -1,44 +1,34 @@
-import type { AbstractForm } from '~/src/types'
-import { useCallback, useEffect } from 'react'
+import type { AbstractForm, Status } from '~/src/types'
+import { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 import {
+  clearForm as _clearForm,
   getFormStatus,
   getFormError,
   useSelector,
+  setFormStatus,
+  setFieldValue,
   updateForm,
-  submitForm,
-  clearForm,
   getForm,
 } from '~/src/store'
 
-export interface UseFormProps<Form extends AbstractForm> {
-  formId: string
+export const useForm = <Form extends AbstractForm>(
+  formId: string,
   defaultForm: Form
-  onSubmit?: (form: AbstractForm) => Promise<unknown>
-}
-
-export const useForm = <Form extends AbstractForm>({
-  formId,
-  defaultForm,
-  onSubmit,
-}: UseFormProps<Form>) => {
+) => {
   const dispatch = useDispatch()
   const form = useSelector((state) => getForm(state, formId, defaultForm))
   const status = useSelector((state) => getFormStatus(state, formId))
   const error = useSelector((state) => getFormError(state, formId))
 
-  useEffect(() => {
-    return () => {
-      dispatch(clearForm({ formId }))
-    }
-  }, [dispatch, formId])
-
-  const submit = useCallback(
-    <Event extends React.SyntheticEvent>(event?: Event) => {
-      event?.preventDefault()
-      dispatch(submitForm({ formId, onSubmit }))
+  const setField = useCallback(
+    <Field extends keyof Form & string, Value extends Form[Field]>(
+      field: Field,
+      value: Value
+    ) => {
+      dispatch(setFieldValue({ formId, field, value }))
     },
-    [dispatch, formId, onSubmit]
+    [dispatch, formId]
   )
 
   const setForm = useCallback(
@@ -48,11 +38,32 @@ export const useForm = <Form extends AbstractForm>({
     [dispatch, formId]
   )
 
+  const clearForm = useCallback(() => {
+    dispatch(_clearForm({ formId }))
+  }, [dispatch, formId])
+
+  const setError = useCallback(
+    (error?: string) => {
+      dispatch(setFormStatus({ formId, status: 'error', error }))
+    },
+    [dispatch, formId]
+  )
+
+  const setStatus = useCallback(
+    (status: Status) => {
+      dispatch(setFormStatus({ formId, status }))
+    },
+    [dispatch, formId]
+  )
+
   return {
     form,
     error,
     status,
-    submit,
     setForm,
+    setError,
+    setStatus,
+    setField,
+    clearForm,
   }
 }
