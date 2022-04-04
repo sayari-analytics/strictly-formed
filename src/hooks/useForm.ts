@@ -2,14 +2,14 @@ import type { AbstractForm, Status } from '~/src/types'
 import { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 import {
-  clearForm as _clearForm,
-  getFormStatus,
-  getFormError,
-  useSelector,
-  setFormStatus,
-  setFieldValue,
-  updateForm,
   getForm,
+  useSelector,
+  getFormError,
+  setFormStatus,
+  getFormStatus,
+  setForm as _setForm,
+  setField as _setField,
+  clearForm as _clearForm,
 } from '~/src/store'
 
 export const useForm = <Form extends AbstractForm>(
@@ -22,18 +22,18 @@ export const useForm = <Form extends AbstractForm>(
   const error = useSelector((state) => getFormError(state, formId))
 
   const setField = useCallback(
-    <Field extends keyof Form & string, Value extends Form[Field]>(
-      field: Field,
+    <Name extends keyof Form & string, Value extends Form[Name]>(
+      name: Name,
       value: Value
     ) => {
-      dispatch(setFieldValue({ formId, field, value }))
+      dispatch(_setField({ formId, name, value }))
     },
     [dispatch, formId]
   )
 
   const setForm = useCallback(
     (changes: Form) => {
-      dispatch(updateForm({ formId, form: changes }))
+      dispatch(_setForm({ formId, form: changes }))
     },
     [dispatch, formId]
   )

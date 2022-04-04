@@ -1,14 +1,14 @@
 import type { FormAction } from './actions'
 import { dissoc, lensPath, over } from 'ramda'
-import { FormData, FormState } from '~src/types'
+import { FormData, FormState } from '~/src/types'
 import { Reducer } from 'redux'
 import {
   COMPLETE,
   CLEAR_FORM,
-  UPDATE_FORM,
-  SET_FIELD_VALUE,
+  SET_FORM,
+  SET_FIELD,
   SET_FORM_STATUS,
-} from './constants'
+} from '~/src/utils/constants'
 
 const assocForm = (
   fn: (form: FormData) => FormData,
@@ -21,7 +21,7 @@ export const formReducer: Reducer<FormState, FormAction> = (
   action
 ) => {
   switch (action.type) {
-    case UPDATE_FORM:
+    case SET_FORM:
       return {
         ...state,
         [action.formId]: {
@@ -45,13 +45,13 @@ export const formReducer: Reducer<FormState, FormAction> = (
         state,
         action.formId
       )
-    case SET_FIELD_VALUE:
+    case SET_FIELD:
       return assocForm(
         (current) => ({
           status: COMPLETE,
           form: {
             ...(current ? current.form : {}),
-            [action.field]: action.value,
+            [action.name]: action.value,
           },
         }),
         state,

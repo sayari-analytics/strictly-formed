@@ -3,15 +3,11 @@ export {
   getFormError,
   getFormStatus,
   clearForm,
-  submitForm,
-  updateForm,
-  submitFormError,
-  submitFormSuccess,
+  setForm as updateForm,
   formReducer,
-  formMiddleware,
 } from '~/src/store'
 
-export { useForm, useInputField } from '~/src/hooks'
+export { useForm } from '~/src/hooks/useForm'
 
 export type {
   AbstractForm,
@@ -20,8 +16,6 @@ export type {
   FormStateMap,
   SelectField,
   InputField,
-  AbstractField,
-  Field,
   Option,
   OptionGroup,
   SelectOption,

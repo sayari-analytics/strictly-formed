@@ -2,16 +2,16 @@ import type { AbstractForm, Status } from '~/src/types'
 import type { Action as ReduxAction } from 'redux'
 import {
   CLEAR_FORM,
-  UPDATE_FORM,
+  SET_FORM,
   SET_FORM_STATUS,
-  SET_FIELD_VALUE,
-} from './constants'
+  SET_FIELD,
+} from '~/src/utils/constants'
 
 export type FormAction =
   | ClearFormAction
-  | UpdateFormAction
+  | SetFormAction
   | SetFormStatusAction
-  | SetFieldValueAction
+  | SetFieldAction
 
 type ActionCreator<Type extends string, Props extends object> = (
   props: Props
@@ -31,11 +31,11 @@ export const clearForm = createActionCreator<
   typeof CLEAR_FORM
 >(CLEAR_FORM)
 
-export type UpdateFormAction = ReturnType<typeof updateForm>
-export const updateForm = createActionCreator<
+export type SetFormAction = ReturnType<typeof setForm>
+export const setForm = createActionCreator<
   { formId: string; form: AbstractForm },
-  typeof UPDATE_FORM
->(UPDATE_FORM)
+  typeof SET_FORM
+>(SET_FORM)
 
 export type SetFormStatusAction = ReturnType<typeof setFormStatus>
 export const setFormStatus = createActionCreator<
@@ -43,8 +43,8 @@ export const setFormStatus = createActionCreator<
   typeof SET_FORM_STATUS
 >(SET_FORM_STATUS)
 
-export type SetFieldValueAction = ReturnType<typeof setFieldValue>
-export const setFieldValue = createActionCreator<
-  { formId: string; field: string; value: unknown },
-  typeof SET_FIELD_VALUE
->(SET_FIELD_VALUE)
+export type SetFieldAction = ReturnType<typeof setField>
+export const setField = createActionCreator<
+  { formId: string; name: string; value: unknown },
+  typeof SET_FIELD
+>(SET_FIELD)

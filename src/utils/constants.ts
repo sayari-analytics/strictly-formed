@@ -1,0 +1,9 @@
+export const COMPLETE = 'complete' as const
+export const PENDING = 'pending' as const
+export const ERROR = 'error' as const
+export const SET_FORM = 'SET_FORM'
+export const SET_FIELD = 'SET_FIELD'
+export const SET_FORM_STATUS = 'SET_FORM_STATUS'
+export const CLEAR_FORM = 'CLEAR_FORM'
+export const SELECT_ALL = 'SELECT_ALL'
+export const SELECT_NONE = 'SELECT_NONE'

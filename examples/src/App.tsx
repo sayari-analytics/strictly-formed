@@ -1,6 +1,7 @@
 import React from 'react'
 import Form from './Form'
 import './App.css'
+import StrictForm from './StrictForm'
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
         justifyContent: 'center',
       }}>
       <Form formId='app-form-1' />
+      <StrictForm formId='strict-form-1' />
       <Form formId='app-form-2' />
     </div>
   )

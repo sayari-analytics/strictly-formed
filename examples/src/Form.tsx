@@ -18,6 +18,10 @@ const Form: FunctionComponent<Props> = ({ formId }) => {
     defaultForm
   )
 
+  const onNum = (event: React.ChangeEvent<HTMLInputElement>) => {
+    console.log('event', event.target.value)
+    console.log('event type', typeof event.target.value)
+  }
   const onChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       setField('input', event.target.value)
@@ -41,6 +45,8 @@ const Form: FunctionComponent<Props> = ({ formId }) => {
   return (
     <div>
       <h1>{header}</h1>
+      <input type='radio' onChange={(e) => console.log(e.target.value)} />
+      <input type='number' onChange={onNum} />
       <h3 style={{ color: 'darkgray' }}>{status}</h3>
       <pre>{JSON.stringify(form)}</pre>
       <form onSubmit={onSubmit}>
