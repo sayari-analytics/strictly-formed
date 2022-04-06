@@ -37,4 +37,4 @@ export type {
   SelectedKey,
   InputProps,
   SelectProps,
-} from './types'
+} from '~/src/types'

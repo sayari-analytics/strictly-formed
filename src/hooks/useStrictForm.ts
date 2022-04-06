@@ -14,12 +14,19 @@ import type {
   FieldProps,
   SelectField,
   SelectedKey,
+  StrictForm,
+  Status,
 } from '~/src/types'
 
-export const useStrictForm = <Props extends FieldProps>(
+export const useStrictForm: <Props extends FieldProps>(
   formId: string,
   fieldProps: Props
-) => {
+) => StrictForm<Props> & {
+  status: Status
+  error: string | undefined
+  setInput: (field: InputField, value: string) => void
+  setSelected: (field: SelectField, selectedKey?: SelectedKey) => void
+} = (formId, fieldProps) => {
   const dispatch = useDispatch()
   const fields = useMemoCompare(() => createFields(fieldProps), [fieldProps])
 
