@@ -4,10 +4,14 @@ import { useDispatch } from 'react-redux'
 import { useCallback } from 'react'
 import {
   useSelector,
+  isFormDirty,
   getFormStatus,
   getFormError,
   setField,
   getForm,
+  setForm,
+  setFormStatus,
+  clearForm as _clearForm,
 } from '~/src/store'
 import type {
   InputField,
@@ -21,50 +25,99 @@ import type {
 export const useStrictForm: <Props extends FieldProps>(
   formId: string,
   fieldProps: Props
-) => StrictForm<Props> & {
+) => {
+  form: StrictForm<Props>
   status: Status
+  dirty: boolean
   error: string | undefined
+  setStatus: (status: Status) => void
+  setError: (error: string) => void
   setInput: (field: InputField, value: string) => void
   setSelected: (field: SelectField, selectedKey?: SelectedKey) => void
+  clearForm: () => void
 } = (formId, fieldProps) => {
   const dispatch = useDispatch()
   const fields = useMemoCompare(() => createFields(fieldProps), [fieldProps])
 
-  const state = useSelector((store) => getForm(store, formId, fields))
+  const form = useSelector((store) => getForm(store, formId, fields))
   const status = useSelector((store) => getFormStatus(store, formId))
   const error = useSelector((store) => getFormError(store, formId))
+  const dirty = useSelector((state) => isFormDirty(state, formId))
 
-  const setInput = useCallback(
-    (field: InputField, value: string) => {
-      dispatch(
-        setField({
-          formId,
-          name: field.name,
-          value: handleInput(field, value),
-        })
-      )
+  const clearForm = useCallback(() => {
+    dispatch(_clearForm({ formId }))
+  }, [dispatch, formId])
+
+  const setError = useCallback(
+    (error: string) => {
+      dispatch(setFormStatus({ formId, status: 'error', error }))
     },
     [dispatch, formId]
+  )
+
+  const setStatus = useCallback(
+    (status: Status) => {
+      dispatch(setFormStatus({ formId, status }))
+    },
+    [dispatch, formId]
+  )
+
+  const setInput = useCallback(
+    (target: InputField, value: string) => {
+      if (dirty) {
+        dispatch(
+          setField({
+            formId,
+            name: target.name,
+            value: handleInput(target, value),
+          })
+        )
+      } else {
+        dispatch(
+          setForm({
+            formId,
+            form: { ...fields, [target.name]: handleInput(target, value) },
+          })
+        )
+      }
+    },
+    [dispatch, fields, dirty, formId]
   )
 
   const setSelected = useCallback(
-    (field: SelectField, selectedKey?: SelectedKey) => {
-      dispatch(
-        setField({
-          formId,
-          name: field.name,
-          value: handleSelect(field, selectedKey),
-        })
-      )
+    (target: SelectField, selectedKey?: SelectedKey) => {
+      if (dirty) {
+        dispatch(
+          setField({
+            formId,
+            name: target.name,
+            value: handleSelect(target, selectedKey),
+          })
+        )
+      } else {
+        dispatch(
+          setForm({
+            formId,
+            form: {
+              ...fields,
+              [target.name]: handleSelect(target, selectedKey),
+            },
+          })
+        )
+      }
     },
-    [dispatch, formId]
+    [dispatch, fields, dirty, formId]
   )
 
   return {
-    ...state,
+    form,
     status,
+    dirty,
     error,
     setInput,
     setSelected,
+    setStatus,
+    setError,
+    clearForm,
   }
 }

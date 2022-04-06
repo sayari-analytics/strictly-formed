@@ -9,4 +9,9 @@ export { clearForm, setForm, setFormStatus, setField } from './redux/actions'
 
 export { formReducer } from './redux/reducer'
 
-export { getForm, getFormError, getFormStatus } from './redux/selectors'
+export {
+  getForm,
+  getFormError,
+  getFormStatus,
+  isFormDirty,
+} from './redux/selectors'

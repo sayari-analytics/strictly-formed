@@ -9,6 +9,7 @@
   "scripts": {
     "clean": "rm -rf ./dist && rm -rf .parcel-cache",
     "dev": "npm run clean && tsc --watch",
+    "dev:example": "npm run clean && parcel 'example/index.html'",
     "build": "npm run clean && parcel build 'src/index.ts'",
     "lint": "tslint --config ./tslint.json --project ./tsconfig.json --format stylish",
     "test": "node test/",
@@ -28,8 +29,8 @@
   ],
   "peerDependencies": {
     "react": "^16.0.0 || ^17.0.0",
-    "redux": "^4.0.0",
-    "react-redux": "^7.0.0"
+    "react-redux": "^7.0.0",
+    "redux": "^4.0.0"
   },
   "author": "James Conkling <james.lane.conkling@gmail.com>",
   "license": "ISC",
@@ -40,8 +41,10 @@
   "devDependencies": {
     "@parcel/packager-ts": "^2.4.0",
     "@parcel/transformer-typescript-types": "^2.4.0",
+    "@redux-devtools/extension": "^3.2.2",
     "@types/ramda": "^0.28.1",
     "@types/react": "^17.0.40",
+    "@types/react-dom": "^17.0.14",
     "@types/react-redux": "^7.1.23",
     "@typescript-eslint/eslint-plugin": "^5.15.0",
     "@typescript-eslint/parser": "^5.15.0",

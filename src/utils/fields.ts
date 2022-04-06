@@ -9,9 +9,10 @@ import type {
   Option,
   Field,
   SelectedKey,
+  InputType,
 } from '~/src/types'
 import { SELECT_ALL, SELECT_NONE } from './constants'
-import { prop } from 'ramda'
+import { any, prop, propEq } from 'ramda'
 
 export const isInputProps = (
   value: InputProps | SelectProps
@@ -19,6 +20,9 @@ export const isInputProps = (
 export const isSelectProps = (
   value: InputProps | SelectProps
 ): value is SelectProps => value.field === 'select'
+export const isCheckedInput = (
+  value: InputType
+): value is 'radio' | 'checkbox' => value === 'radio' || value === 'checkbox'
 
 export const createInputField = (
   name: string,
@@ -28,14 +32,14 @@ export const createInputField = (
     return {
       name,
       field,
-      type: 'number',
-      value: isNumber(initialValue) ? initialValue : undefined,
+      type,
+      value: isNumber(initialValue) ? `${initialValue}` : '',
     }
-  } else if (type === 'checked') {
+  } else if (isCheckedInput(type)) {
     return {
       name,
       field,
-      type: 'checked',
+      type,
       value: isBool(initialValue) ? initialValue : false,
     }
   } else {
@@ -65,7 +69,11 @@ export const createSelectField = <Opt extends Option>(
       ...select,
       name,
       multiple: false,
-      selected: isString(initialSelection) ? initialSelection : undefined,
+      selected:
+        isString(initialSelection) &&
+        any(propEq('id', initialSelection), select.options)
+          ? initialSelection
+          : '',
     }
   }
 }
@@ -94,9 +102,9 @@ export const handleInput = <Field extends InputField>(
   if (field.type === 'number') {
     return {
       ...field,
-      value: !isNaN(+value) ? +value : undefined,
+      value: !isNaN(+value) ? value : '',
     }
-  } else if (field.type === 'checked') {
+  } else if (isCheckedInput(field.type)) {
     return {
       ...field,
       value: value === 'on' ? true : false,
@@ -132,10 +140,11 @@ export const handleSelect = <Field extends SelectField>(
     return {
       ...field,
       selected:
+        !any(propEq('id', selectedKey), field.options) ||
         selectedKey === SELECT_ALL ||
         selectedKey === SELECT_NONE ||
         selectedKey === undefined
-          ? undefined
+          ? ''
           : selectedKey,
     }
   }

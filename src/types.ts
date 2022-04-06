@@ -39,7 +39,7 @@ export type StrictForm<Props extends FieldProps> = {
 }
 
 // Input
-export type InputType = 'text' | 'number' | 'checked' | undefined
+export type InputType = 'text' | 'number' | 'radio' | 'checkbox' | undefined
 export type InputField = TextInput | CheckedInput | NumberInput
 
 export type TextInput = {
@@ -53,12 +53,12 @@ export type NumberInput = {
   field: 'input'
   type: 'number'
   name: string
-  value: number | undefined
+  value: `${number}` | ''
 }
 
 export type CheckedInput = {
   field: 'input'
-  type: 'checked'
+  type: 'radio' | 'checkbox'
   value: boolean
   name: string
 }
@@ -85,7 +85,7 @@ export type SingleSelect<Opt extends Option> = {
   field: 'select'
   name: string
   multiple: false
-  selected: string | undefined
+  selected: string
   options: SelectOption<Opt>[]
 }
 
@@ -105,7 +105,7 @@ export type InputProps = {
 } & (
   | { type?: 'text'; initialValue?: string }
   | { type: 'number'; initialValue?: number }
-  | { type: 'checked'; initialValue?: boolean }
+  | { type: 'radio' | 'checkbox'; initialValue?: boolean }
 )
 
 export type SelectProps<Opt extends Option = Option> = {
