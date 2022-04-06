@@ -3,21 +3,38 @@ export {
   getFormError,
   getFormStatus,
   clearForm,
-  setForm as updateForm,
+  setForm,
+  setField,
+  setFormStatus,
   formReducer,
 } from '~/src/store'
 
+export type { FormAction } from '~/src/store'
+
 export { useForm } from '~/src/hooks/useForm'
+export { useStrictForm } from '~/src/hooks/useStrictForm'
 
 export type {
+  Status,
   AbstractForm,
   FormData,
   FormState,
   FormStateMap,
-  SelectField,
+  Field,
+  FieldProps,
+  StrictForm,
+  InputType,
   InputField,
+  TextInput,
+  NumberInput,
+  CheckedInput,
+  SelectField,
+  SelectOption,
   Option,
   OptionGroup,
-  SelectOption,
-  Status,
+  SingleSelect,
+  MultipleSelect,
+  SelectedKey,
+  InputProps,
+  SelectProps,
 } from './types'

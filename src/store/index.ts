@@ -4,13 +4,9 @@ import { useSelector as _useSelector } from 'react-redux'
 
 export const useSelector: TypedUseSelectorHook<FormStateMap> = _useSelector
 
+export type { FormAction } from './redux/actions'
 export { clearForm, setForm, setFormStatus, setField } from './redux/actions'
 
 export { formReducer } from './redux/reducer'
 
-export {
-  getForm,
-  getFormError,
-  getFormStatus,
-  formExists,
-} from './redux/selectors'
+export { getForm, getFormError, getFormStatus } from './redux/selectors'

@@ -1,5 +1,5 @@
 import type { FormStateMap, AbstractForm, Status } from '~/src/types'
-import { has, path, pathOr } from 'ramda'
+import { path, pathOr } from 'ramda'
 
 type FormSelector<Result> = <State extends FormStateMap = FormStateMap>(
   state: State,
@@ -21,6 +21,3 @@ export const getFormStatus: FormSelector<Status> = (state, formId) =>
 
 export const getFormError: FormSelector<string | undefined> = (state, formId) =>
   path(['formState', formId, 'error'], state)
-
-export const formExists: FormSelector<boolean> = (state, formId) =>
-  has(formId, state.formState)
