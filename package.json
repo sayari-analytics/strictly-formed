@@ -12,6 +12,7 @@
     "clean": "rm -rf ./dist && rm -rf .parcel-cache",
     "dev": "npm run clean && tsc --watch",
     "build": "npm run clean && parcel build && cp package* README.md dist/",
+    "deploy:prerelease": "npm run validate && npm version prerelease && npm run build && npm publish && git push --follow-tags",
     "deploy:patch": "npm run validate && npm version patch && npm run build && npm publish && git push --follow-tags",
     "deploy:minor": "npm run validate && npm version minor && npm run build && npm publish && git push --follow-tags",
     "deploy:major": "npm run validate && npm version major && npm run build && npm publish && git push --follow-tags"
