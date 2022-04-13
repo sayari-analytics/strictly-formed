@@ -13,7 +13,7 @@
     "no-console": ["error"],
     "eqeqeq": ["error"],
     "max-len": ["error", {
-      "code": 80,
+      "code": 100,
       "ignoreStrings": true,
       "ignoreComments": true
     }],

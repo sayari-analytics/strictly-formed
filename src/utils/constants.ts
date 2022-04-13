@@ -1,7 +1,0 @@
-export const COMPLETE = 'complete'
-export const SET_FORM = 'SET_FORM'
-export const SET_FIELD = 'SET_FIELD'
-export const SET_FORM_STATUS = 'SET_FORM_STATUS'
-export const CLEAR_FORM = 'CLEAR_FORM'
-export const SELECT_ALL = 'SELECT_ALL'
-export const SELECT_NONE = 'SELECT_NONE'
