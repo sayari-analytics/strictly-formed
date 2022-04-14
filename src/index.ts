@@ -6,3 +6,4 @@ export { componentExists, getComponent, getComponentState } from '~/src/redux/se
 export { componentStateReducer } from '~/src/redux/reducer'
 
 export { useComponentState } from '~/src/hooks/useComponentState'
+export { useTextInput } from '~/src/hooks/useTextInput'

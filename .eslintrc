@@ -10,6 +10,7 @@
   ],
   "rules": {
     "prettier/prettier": ["error"],
+    "react-hooks/exhaustive-deps": ["off"],
     "no-console": ["error"],
     "eqeqeq": ["error"],
     "max-len": ["error", {

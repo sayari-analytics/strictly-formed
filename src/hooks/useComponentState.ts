@@ -6,7 +6,7 @@ import { useCallback, useEffect } from 'react'
 import { useComponentId } from './useComponentId'
 
 export const useComponentState = <Component, State extends ReduxState<Component>>(
-  initialState: Component,
+  initial: Component,
   componentId?: string
 ): [
   Component,
@@ -16,18 +16,25 @@ export const useComponentState = <Component, State extends ReduxState<Component>
   const id = useComponentId<Component>(componentId)
   const store = useStore<State>()
   const dispatch = useDispatch()
-  const state = useSelector<State, Component>((state) => getComponentState(state, id, initialState))
-  const exists = useSelector<State, boolean>((state) => componentExists(state, id))
+  const state = useSelector((state: State) => getComponentState(state, id, initial))
+  const exists = useSelector((state: State) => componentExists(state, id))
 
   const set = useCallback(
     (value?: Component | ((state: Component) => Component)) => {
       if (value === undefined) {
         dispatch(clearComponent<Component>(id))
       } else {
-        dispatch(setComponent(id, value instanceof Function ? value(state) : value))
+        dispatch(
+          setComponent(
+            id,
+            value instanceof Function
+              ? value(getComponentState(store.getState(), id, initial))
+              : value
+          )
+        )
       }
     },
-    [dispatch, state, id]
+    [initial]
   )
 
   useEffect(() => {
@@ -36,7 +43,7 @@ export const useComponentState = <Component, State extends ReduxState<Component>
         dispatch(clearComponent<Component>(id))
       }
     }
-  }, [id, store, dispatch])
+  }, [])
 
   return [state, set, { id, dirty: !exists }]
 }
