@@ -7,7 +7,7 @@ const createId = (() => {
     (componentId ?? `${_id++}`) as Id<Component>
 })()
 
-export const useId = <Component>(componentId?: string): Id<Component> => {
+export const useComponentId = <Component>(componentId?: string): Id<Component> => {
   const id = useRef<Id<Component>>()
 
   if (id.current === undefined) {
