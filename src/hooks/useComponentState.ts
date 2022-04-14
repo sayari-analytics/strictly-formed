@@ -17,7 +17,7 @@ export const useComponentState = <Component, State extends ReduxState<Component>
   const store = useStore<State>()
   const dispatch = useDispatch()
   const state = useSelector<State, Component>((state) => getComponentState(state, id, initialState))
-  const dirty = useSelector<State, boolean>((state) => componentStateExists(state, id))
+  const exists = useSelector<State, boolean>((state) => componentStateExists(state, id))
 
   const set = useCallback(
     (value?: Component | ((state: Component) => Component)) => {
@@ -38,5 +38,5 @@ export const useComponentState = <Component, State extends ReduxState<Component>
     }
   }, [id, store, dispatch])
 
-  return [state, set, { id, dirty }]
+  return [state, set, { id, dirty: !exists }]
 }
