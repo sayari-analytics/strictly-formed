@@ -6,14 +6,14 @@ import { useCallback, useEffect } from 'react'
 import { useComponentId } from './useComponentId'
 
 export const useComponentState = <Component, State extends ReduxState<Component>>(
-  initial: Component,
-  componentId?: string
+  _id: string,
+  initial: Component
 ): [
   Component,
   (value?: Component | ((state: Component) => Component)) => void,
-  { dirty: boolean; id: Id<Component> }
+  { exists: boolean; id: Id<Component> }
 ] => {
-  const id = useComponentId<Component>(componentId)
+  const id = useComponentId<Component>(_id)
   const store = useStore<State>()
   const dispatch = useDispatch()
   const state = useSelector((state: State) => getComponentState(state, id, initial))
@@ -45,5 +45,5 @@ export const useComponentState = <Component, State extends ReduxState<Component>
     }
   }, [])
 
-  return [state, set, { id, dirty: !exists }]
+  return [state, set, { id, exists }]
 }

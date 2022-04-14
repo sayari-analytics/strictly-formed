@@ -13,20 +13,21 @@ export type UserFormState = {
   message?: string
 }
 
+const USER_FORM = 'USER_FORM'
 const DEFAULT_STATE: UserFormState = {
   name: undefined,
   vip: undefined,
   status: 'complete',
 }
 
-export const SignUpForm = ({ id: user_id }: Props) => {
+export const UserForm = ({ id: user_id }: Props) => {
   const dispatch = useDispatch()
 
   const user = useSelector((state: State) => getUser(state, user_id))
   /**
    * if any field is undefined in the form, default to the saved value
    */
-  const [{ name, vip, ...form }, set, { id, dirty }] = useComponentState({
+  const [{ name, vip, ...form }, set, { id, exists }] = useComponentState(USER_FORM, {
     ...DEFAULT_STATE,
     ...user,
   })
@@ -61,7 +62,7 @@ export const SignUpForm = ({ id: user_id }: Props) => {
         <label htmlFor='vip'>VIP</label>
         <button onClick={clear}>Clear</button>
         {/* disable submit if form doesn't contain new info */}
-        <input type='submit' value='Submit' disabled={!dirty} />
+        <input type='submit' value='Submit' disabled={!exists} />
       </form>
       {form.status === 'pending' && 'loading...'}
       {form.status === 'error' && form.message}

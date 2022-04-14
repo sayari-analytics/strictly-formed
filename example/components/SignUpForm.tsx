@@ -10,6 +10,7 @@ export type SignupFormState = {
   message?: string
 }
 
+const SIGN_UP_FORM = 'SIGN_UP_FORM'
 const DEFAULT_STATE: SignupFormState = {
   name: undefined,
   vip: false,
@@ -19,7 +20,7 @@ const DEFAULT_STATE: SignupFormState = {
 export const SignUpForm = () => {
   const dispatch = useDispatch()
 
-  const [state, set, { id }] = useComponentState(DEFAULT_STATE)
+  const [state, set, { id }] = useComponentState(SIGN_UP_FORM, DEFAULT_STATE)
 
   const setName = useCallback(
     ({ target: { value } }) => {

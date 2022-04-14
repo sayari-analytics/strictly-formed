@@ -6,7 +6,6 @@ import { useComponentId } from './useComponentId'
 import { useCallback } from 'react'
 
 export type TextInputProps = {
-  id?: string
   value?: string
   pattern?: RegExp
   required?: boolean
@@ -23,16 +22,13 @@ export type TextInputReturn = [
   }
 ]
 
-export const useTextInput = <State extends ReduxState<string>>({
-  id: inputId,
-  value: initial = '',
-  length: [min, max] = [0, Infinity],
-  required,
-  pattern,
-}: TextInputProps): TextInputReturn => {
+export const useTextInput = <State extends ReduxState<string>>(
+  _id: string,
+  { value: initial = '', length: [min, max] = [0, Infinity], required, pattern }: TextInputProps
+): TextInputReturn => {
   const store = useStore()
   const dispatch = useDispatch()
-  const id = useComponentId<string>(inputId)
+  const id = useComponentId<string>(_id)
   const value = useSelector((state: State) => getComponentState(state, id, initial))
 
   const set = useCallback(
