@@ -1,4 +1,4 @@
-import type { Id, ReduxState } from '~/src/types'
+import type { Id, ReduxState } from '~src/types'
 import { componentExists, getComponentState } from '~src/redux/selectors'
 import { useDispatch, useSelector, useStore } from 'react-redux'
 import { clearComponent, setComponent } from '~src/redux/actions'

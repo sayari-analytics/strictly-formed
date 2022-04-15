@@ -1,4 +1,4 @@
-import type { Id } from '~/src/types'
+import type { Id } from '~src/types'
 
 // constants
 export const SET_COMPONENT = 'SET_COMPONENT'

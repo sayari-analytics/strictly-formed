@@ -7,7 +7,7 @@ import { State } from '~/example/redux/store'
 export type Props = { id: string }
 
 export type UserFormState = {
-  name?: string
+  name: string
   vip?: boolean
   status: 'complete' | 'pending' | 'error'
   message?: string
@@ -15,7 +15,7 @@ export type UserFormState = {
 
 const USER_FORM = 'USER_FORM'
 const DEFAULT_STATE: UserFormState = {
-  name: undefined,
+  name: '',
   vip: undefined,
   status: 'complete',
 }
@@ -53,7 +53,7 @@ export const UserForm = ({ id: user_id }: Props) => {
 
   return (
     <>
-      <form onSubmit={submit}>
+      <form onSubmit={submit} style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
         <label>
           Name:
           <input type='text' name='name' value={name} onChange={setName} />

@@ -1,4 +1,4 @@
-import type { Id, ReduxState } from '~/src/types'
+import type { Id, ReduxState } from '~src/types'
 
 export const componentExists = <Component>(state: ReduxState<Component>, id: Id<Component>) => {
   return state.components.hasOwnProperty(id)

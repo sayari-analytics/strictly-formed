@@ -1,6 +1,6 @@
-import type { Id, ReduxState } from '~/src/types'
+import type { Id, ReduxState } from '~src/types'
 import { useDispatch, useSelector, useStore } from 'react-redux'
-import { clearComponent, setComponent } from '~/src/redux/actions'
+import { clearComponent, setComponent } from '~src/redux/actions'
 import { getComponentState } from '~src/redux/selectors'
 import { useComponentId } from './useComponentId'
 import { useCallback } from 'react'
@@ -12,7 +12,10 @@ export type TextInputProps = {
   length?: [number, number]
 }
 
-export type TextInputReturn = [
+export const useTextInput = <State extends ReduxState<string>>(
+  _id: string,
+  { value: initial = '', length: [min, max] = [0, Infinity], required, pattern }: TextInputProps
+): [
   string,
   (value?: string | ((value: string) => string)) => void,
   {
@@ -20,12 +23,7 @@ export type TextInputReturn = [
     valid: boolean
     error?: 'required' | 'minlength' | 'maxlength' | 'pattern'
   }
-]
-
-export const useTextInput = <State extends ReduxState<string>>(
-  _id: string,
-  { value: initial = '', length: [min, max] = [0, Infinity], required, pattern }: TextInputProps
-): TextInputReturn => {
+] => {
   const store = useStore()
   const dispatch = useDispatch()
   const id = useComponentId<string>(_id)

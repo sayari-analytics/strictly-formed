@@ -98,7 +98,7 @@ export const updateUserComplete = (
 /**
  * reducer
  */
-export const reducer = (state: UsersState, action: Action) => {
+export const reducer = (state: UsersState = {}, action: Action) => {
   if (action.type === CREATE_USER_COMPLETE) {
     return {
       ...state.users,

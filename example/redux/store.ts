@@ -20,7 +20,7 @@ const epicMiddleware = createEpicMiddleware<Action, Action, State>()
 
 export const store = createStore(
   combineReducers({
-    componentState: componentStateReducer,
+    components: componentStateReducer,
     users: userReducer,
   }),
   applyMiddleware(epicMiddleware)

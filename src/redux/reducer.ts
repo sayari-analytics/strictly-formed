@@ -1,5 +1,5 @@
 import { SET_COMPONENT, CLEAR_COMPONENT } from './actions'
-import type { ComponentState } from '~/src/types'
+import type { ComponentState } from '~src/types'
 import type { AnyAction } from 'redux'
 
 export const componentStateReducer = <Component>(
