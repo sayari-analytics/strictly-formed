@@ -11,11 +11,11 @@
     "format": "prettier \"src/**/**.{ts,tsx}\" --write",
     "clean": "rm -rf ./dist && rm -rf .parcel-cache",
     "dev": "npm run clean && parcel 'example/index.html'",
-    "build": "npm run clean && parcel build 'src/index.ts' && cp package* README.md dist/",
-    "deploy:prerelease": "npm run validate && npm version prerelease && npm run build && npm publish dist/ && git push --follow-tags",
-    "deploy:patch": "npm run validate && npm version patch && npm run build && npm publish dist/ && git push --follow-tags",
-    "deploy:minor": "npm run validate && npm version minor && npm run build && npm publish dist/ && git push --follow-tags",
-    "deploy:major": "npm run validate && npm version major && npm run build && npm publish dist/ && git push --follow-tags"
+    "build": "npm run clean && parcel build",
+    "deploy:prerelease": "npm run validate && npm version prerelease && npm run build && npm publish && git push --follow-tags",
+    "deploy:patch": "npm run validate && npm version patch && npm run build && npm publish && git push --follow-tags",
+    "deploy:minor": "npm run validate && npm version minor && npm run build && npm publish && git push --follow-tags",
+    "deploy:major": "npm run validate && npm version major && npm run build && npm publish && git push --follow-tags"
   },
   "repository": {
     "type": "git",
