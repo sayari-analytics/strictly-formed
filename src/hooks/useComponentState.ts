@@ -5,10 +5,21 @@ import { clearComponent, setComponent } from '~src/redux/actions'
 import { useCallback, useEffect } from 'react'
 import { useComponentId } from './useComponentId'
 
+export type Meta<Component = unknown> = {
+  exists: boolean
+  id: Id<Component>
+}
+
+export type UseComponentStateReturn<Component = unknown> = [
+  Component,
+  SetHandler<Component>,
+  Meta<Component>
+]
+
 export const useComponentState = <Component, State extends ReduxState<Component>>(
   _id: string,
   initial: Component
-): [Component, SetHandler<Component>, { exists: boolean; id: Id<Component> }] => {
+): UseComponentStateReturn<Component> => {
   const id = useComponentId<Component>(_id)
   const store = useStore<State>()
   const dispatch = useDispatch()

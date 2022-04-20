@@ -1,7 +1,8 @@
 import React from 'react'
-import type { Id, SetHandler } from '~src/types'
-import { useComponentState } from '~src/hooks/useComponentState'
+import { useComponentState, UseComponentStateReturn } from '~src/hooks/useComponentState'
+import { CLEAR_COMPONENT, SET_COMPONENT } from '~src'
 import { store, render, act } from '~tests/test-utils'
+import { Id } from '~src/types'
 
 type TestState = {
   input: string
@@ -15,6 +16,9 @@ const initialState: TestState = {
 }
 
 const TEST_COMPONENT_STATE = 'TEST_COMPONENT_STATE'
+const STATE = 0
+const SET = 1
+const META = 2
 
 // utils
 const isObject = (value: unknown): value is object =>
@@ -32,82 +36,120 @@ const setup = () => {
     return null
   }
 
-  render(<TestComponent />)
-  return props as ReturnType<typeof useComponentState>
+  const { unmount, rerender } = render(<TestComponent />)
+
+  return {
+    unmount,
+    rerender,
+    props: props as UseComponentStateReturn<TestState>,
+  }
 }
 
 // tests
 describe('[useComponentState]', () => {
-  let component: ReturnType<typeof setup>
-
-  beforeEach(() => {
-    component = setup()
+  beforeAll(() => {
+    jest.spyOn(store, 'dispatch')
   })
 
-  it('returns the initial state exactly as provided before interaction', () => {
-    const state = component[0] as TestState
-
-    expect(isObject(state)).toBe(true)
-    expect(state.input).toEqual('')
-    expect(state.open).toBe(false)
-    expect(state.name).toBe(undefined)
-    expect(component[2].id).toEqual(TEST_COMPONENT_STATE)
+  afterEach(() => {
+    jest.clearAllMocks()
   })
 
-  it('is not initialized in redux before interaction', () => {
-    expect(component[2].exists).toBe(false)
-    expect(getState()).toBe(undefined)
+  describe('[on mount]', () => {
+    let component: ReturnType<typeof setup>
+
+    beforeEach(() => {
+      component = setup()
+    })
+
+    it('returns the initial state exactly as provided', () => {
+      expect(isObject(component.props[STATE])).toBe(true)
+      expect(component.props[STATE]).toEqual(initialState)
+      expect(component.props[META].id).toEqual(TEST_COMPONENT_STATE)
+    })
+
+    it('does not dispatch any actions before the "set" handler is invoked', () => {
+      expect(store.dispatch).toHaveBeenCalledTimes(0)
+      expect(component.props[META].exists).toBe(false)
+      expect(getState()).toBeUndefined()
+    })
   })
 
-  it('correctly updates state in component & redux via "set" handler', () => {
-    const set = component[1] as SetHandler<TestState>
+  describe('[on update]', () => {
+    let component: ReturnType<typeof setup>
+    const firstUpdate = {
+      ...initialState,
+      name: 'testing state updates',
+    }
 
-    // first update
-    act(() => {
-      set((current) => ({
-        ...current,
-        name: 'testing state updates',
-      }))
+    beforeEach(() => {
+      component = setup()
+
+      // first update
+      act(() => {
+        component.props[SET](firstUpdate)
+      })
     })
 
-    expect(component[2].exists).toBe(true)
-    expect(getState()).toBeDefined()
+    it('correctly updates state via "set" handler', () => {
+      expect(component.props[META].exists).toBe(true)
+      expect(store.dispatch).toHaveBeenLastCalledWith({
+        id: TEST_COMPONENT_STATE,
+        type: SET_COMPONENT,
+        value: firstUpdate,
+      })
 
-    expect((component[0] as TestState).name).toEqual('testing state updates')
-    expect(getState()?.name).toEqual('testing state updates')
+      expect(getState()).toEqual(firstUpdate)
+      expect(component.props[STATE]).toEqual(firstUpdate)
 
-    // second update
-    act(() => {
-      set((current) => ({
-        ...current,
-        open: true,
-      }))
+      // second update
+      const secondUpdate = { ...firstUpdate, open: true }
+      act(() => {
+        component.props[SET](secondUpdate)
+      })
+
+      expect(store.dispatch).toHaveBeenCalledTimes(2)
+      expect(component.props[STATE]).toEqual(secondUpdate)
+      expect(getState()).toEqual(secondUpdate)
     })
 
-    expect((component[0] as TestState).open).toBe(true)
-    expect(getState()?.open).toBe(true)
-
-    // first update persists
-    expect((component[0] as TestState).name).toEqual('testing state updates')
-    expect(getState()?.name).toEqual('testing state updates')
+    it('clears component state from redux when no argument is provided to "set" handler', () => {
+      act(() => {
+        component.props[SET]()
+      })
+      expect(store.dispatch).toHaveBeenLastCalledWith({
+        id: TEST_COMPONENT_STATE,
+        type: CLEAR_COMPONENT,
+      })
+      expect(component.props[META].exists).toBe(false)
+      expect(getState()).toBeUndefined()
+    })
   })
 
-  it('clears state from redux when no argument is provided to "set" handler', () => {
-    const set = component[1] as SetHandler<TestState>
+  describe('[on unmount]', () => {
+    let component: ReturnType<typeof setup>
 
-    act(() => {
-      set((current) => ({
-        ...current,
-        name: 'testing state updates',
-      }))
+    beforeEach(() => {
+      component = setup()
     })
 
-    expect(component[2].exists).toBe(true)
-
-    act(() => {
-      set()
+    it('does not dispatch any actions if the state never changed', () => {
+      component.unmount()
+      expect(store.dispatch).toBeCalledTimes(0)
+      expect(getState()).toBeUndefined()
     })
 
-    expect(component[2].exists).toBe(false)
+    it('clears component state from redux if the state changed', () => {
+      act(() => {
+        component.props[SET]((current) => ({ ...current, open: true }))
+      })
+
+      component.unmount()
+      expect(store.dispatch).toHaveBeenLastCalledWith({
+        id: TEST_COMPONENT_STATE,
+        type: CLEAR_COMPONENT,
+      })
+      expect(getState()).toBeUndefined()
+    })
   })
 })
