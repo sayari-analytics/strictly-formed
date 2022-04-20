@@ -7,3 +7,7 @@ export type ComponentState<Component = unknown> = Record<Id<Component>, Componen
 export type ReduxState<Component = unknown> = {
   components: ComponentState<Component>
 }
+
+export type SetHandler<Component = unknown> = (
+  value?: Component | ((state: Component) => Component)
+) => void

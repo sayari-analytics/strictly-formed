@@ -1,4 +1,4 @@
-import type { Id, ReduxState } from '~src/types'
+import type { Id, ReduxState, SetHandler } from '~src/types'
 import { useDispatch, useSelector, useStore } from 'react-redux'
 import { clearComponent, setComponent } from '~src/redux/actions'
 import { getComponentState } from '~src/redux/selectors'
@@ -17,7 +17,7 @@ export const useTextInput = <State extends ReduxState<string>>(
   { value: initial = '', length: [min, max] = [0, Infinity], required, pattern }: TextInputProps
 ): [
   string,
-  (value?: string | ((value: string) => string)) => void,
+  SetHandler<string>,
   {
     id: Id<string>
     valid: boolean

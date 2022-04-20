@@ -1,4 +1,4 @@
-import type { Id, ReduxState } from '~src/types'
+import type { Id, ReduxState, SetHandler } from '~src/types'
 import { componentExists, getComponentState } from '~src/redux/selectors'
 import { useDispatch, useSelector, useStore } from 'react-redux'
 import { clearComponent, setComponent } from '~src/redux/actions'
@@ -8,11 +8,7 @@ import { useComponentId } from './useComponentId'
 export const useComponentState = <Component, State extends ReduxState<Component>>(
   _id: string,
   initial: Component
-): [
-  Component,
-  (value?: Component | ((state: Component) => Component)) => void,
-  { exists: boolean; id: Id<Component> }
-] => {
+): [Component, SetHandler<Component>, { exists: boolean; id: Id<Component> }] => {
   const id = useComponentId<Component>(_id)
   const store = useStore<State>()
   const dispatch = useDispatch()
