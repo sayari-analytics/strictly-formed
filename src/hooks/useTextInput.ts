@@ -9,7 +9,7 @@ export type InputValidators = {
   pattern?: RegExp
   required?: boolean
   length?: [number, number]
-  autofocus?: boolean
+  autoFocus?: boolean
 }
 
 export type TextInputProps = InputValidators & { value?: string }
@@ -18,10 +18,20 @@ type Meta = {
   id: Id<TextInput>
   valid: boolean
   error?: ValidationError
-  ref: React.MutableRefObject<HTMLInputElement | undefined>
+  ref: React.RefObject<HTMLInputElement>
 }
 
-const validate = (
+export type UseTextInputReturn = [
+  string,
+  SetHandler<string>,
+  () => {
+    valid: boolean
+    error?: ValidationError
+  },
+  Meta
+]
+
+const handleValidation = (
   value: string,
   { length: [min, max] = [0, Infinity], required, pattern }: InputValidators
 ): {
@@ -42,10 +52,10 @@ const validate = (
 export const useTextInput = <State extends ReduxState<TextInput>>(
   _id: string,
   { value: initial = '', ...props }: TextInputProps
-): [string, SetHandler<string>, Meta] => {
+): UseTextInputReturn => {
   const store = useStore()
   const dispatch = useDispatch()
-  const ref = useRef<HTMLInputElement>()
+  const ref = useRef<HTMLInputElement>(null)
   const id = useComponentId<TextInput>(_id)
   const validators = useRef<InputValidators>(props)
 
@@ -58,24 +68,24 @@ export const useTextInput = <State extends ReduxState<TextInput>>(
       if (target === undefined) {
         dispatch(clearComponent<TextInput>(id))
       } else {
-        const _value =
-          target instanceof Function
-            ? target(getComponent(store.getState(), id)?.value || initial)
-            : target
+        const current = getComponentState(store.getState(), id, { value: initial, valid: true })
+        const _value = target instanceof Function ? target(current.value) : target
 
-        dispatch(
-          setComponent(id, {
-            value: _value,
-            ...validate(_value, validators.current),
-          })
-        )
+        dispatch(setComponent(id, { ...current, value: _value }))
       }
     },
     [initial]
   )
 
+  const validate = useCallback(() => {
+    const _value = getComponent(store.getState(), id)?.value || initial
+    const valid = handleValidation(_value, validators.current)
+    dispatch(setComponent(id, { value: _value, ...valid }))
+    return valid
+  }, [initial])
+
   useEffect(() => {
-    if (validators.current.autofocus && ref.current) {
+    if (validators.current.autoFocus && ref.current) {
       ref.current.focus()
     }
     return () => {
@@ -85,5 +95,5 @@ export const useTextInput = <State extends ReduxState<TextInput>>(
     }
   }, [])
 
-  return [value, set, { id, ref, ...meta }]
+  return [value, set, validate, { id, ref, ...meta }]
 }

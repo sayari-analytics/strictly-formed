@@ -3,9 +3,13 @@ import ReactDOM from 'react-dom'
 import React from 'react'
 import { store } from './redux/store'
 import { UserForm } from './components/UserForm'
+import InputForm from './components/InputForm'
+
+const EMAIL_REGEX = new RegExp(
+  /^[a-zA-Z0-9.!#$%&’*+\/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
+)
 
 const App = () => {
-  const [tog, setTog] = React.useState(true)
   return (
     <div
       style={{
@@ -15,19 +19,19 @@ const App = () => {
         alignItems: 'center',
         justifyContent: 'center',
         flexDirection: 'column',
+        gap: 16,
       }}>
-      <h1>Mikey Pioli</h1>
-      {tog ? (
-        <div style={{ backgroundColor: 'pink' }}>
-          <UserForm id='one' />
-        </div>
-      ) : (
-        <div style={{ backgroundColor: 'lime' }}>
-          <UserForm id='two' />
-          <UserForm id='three' />
-        </div>
-      )}
-      <button onClick={() => setTog((x) => !x)}>tog</button>
+      <InputForm
+        required
+        autoFocus
+        id='text_input_example'
+        label='Text Input Example'
+        pattern={EMAIL_REGEX}
+      />
+
+      <div style={{ backgroundColor: 'pink' }}>
+        <UserForm id='one' />
+      </div>
     </div>
   )
 }
