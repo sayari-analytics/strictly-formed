@@ -19,6 +19,7 @@ type Meta = {
   valid: boolean
   error?: ValidationError
   ref: React.RefObject<HTMLInputElement>
+  exists: boolean
 }
 
 export type UseTextInputReturn = [
@@ -31,7 +32,7 @@ export type UseTextInputReturn = [
   Meta
 ]
 
-const handleValidation = (
+export const handleValidation = (
   value: string,
   { length: [min, max] = [0, Infinity], required, pattern }: InputValidators
 ): {
@@ -51,7 +52,7 @@ const handleValidation = (
 
 export const useTextInput = <State extends ReduxState<TextInput>>(
   _id: string,
-  { value: initial = '', ...props }: TextInputProps
+  { value: initial = '', ...props }: TextInputProps = {}
 ): UseTextInputReturn => {
   const store = useStore()
   const dispatch = useDispatch()
@@ -59,6 +60,7 @@ export const useTextInput = <State extends ReduxState<TextInput>>(
   const id = useComponentId<TextInput>(_id)
   const validators = useRef<InputValidators>(props)
 
+  const exists = useSelector((state: State) => componentExists(state, id))
   const { value, ...meta } = useSelector((state: State) =>
     getComponentState(state, id, { value: initial, valid: true })
   )
@@ -85,8 +87,17 @@ export const useTextInput = <State extends ReduxState<TextInput>>(
   }, [initial])
 
   useEffect(() => {
-    if (validators.current.autoFocus && ref.current) {
-      ref.current.focus()
+    if (validators.current.autoFocus) {
+      if (ref.current) {
+        ref.current.focus()
+      } else {
+        // eslint-disable-next-line no-console
+        console.warn(`
+        strictly-formed | WARN: "missing ref"
+          cannot locate input: "${id}".
+          please use the provided "ref" for your input element to enable autoFocus
+        `)
+      }
     }
     return () => {
       if (componentExists(store.getState(), id)) {
@@ -95,5 +106,5 @@ export const useTextInput = <State extends ReduxState<TextInput>>(
     }
   }, [])
 
-  return [value, set, validate, { id, ref, ...meta }]
+  return [value, set, validate, { id, ref, exists, ...meta }]
 }

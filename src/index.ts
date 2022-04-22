@@ -1,5 +1,7 @@
-export type { Id, ComponentState } from '~src/types'
+export type { Id, ComponentState, SetHandler, ValidationError, TextInput } from '~src/types'
 export type { ComponentStateAction } from '~src/redux/actions'
+export type { UseComponentStateReturn } from '~src/hooks/useComponentState'
+export type { UseTextInputReturn, InputValidators } from '~src/hooks/useTextInput'
 
 export { setComponent, clearComponent, SET_COMPONENT, CLEAR_COMPONENT } from '~src/redux/actions'
 export { componentExists, getComponent, getComponentState } from '~src/redux/selectors'
