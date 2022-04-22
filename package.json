@@ -9,7 +9,8 @@
   "scripts": {
     "test": "jest",
     "lint": "eslint \"src/**/**.{ts,tsx}\"",
-    "validate": "npm run lint && npm run test",
+    "check": "tsc --noEmit",
+    "validate": "npm run lint && npm run check && npm run test",
     "format": "prettier \"src/**/**.{ts,tsx}\" --write",
     "clean": "rm -rf ./dist && rm -rf .parcel-cache",
     "dev": "npm run clean && parcel 'example/index.html'",
