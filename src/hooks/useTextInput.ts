@@ -1,5 +1,5 @@
 import type { Id, ReduxState, SetHandler, TextInput, ValidationError } from '~src/types'
-import { componentExists, getComponent, getComponentState } from '~src/redux/selectors'
+import { componentExists, getComponentState } from '~src/redux/selectors'
 import { useDispatch, useSelector, useStore } from 'react-redux'
 import { clearComponent, setComponent } from '~src/redux/actions'
 import { useCallback, useEffect, useRef } from 'react'
@@ -80,10 +80,10 @@ export const useTextInput = <State extends ReduxState<TextInput>>(
   )
 
   const validate = useCallback(() => {
-    const _value = getComponent(store.getState(), id)?.value || initial
-    const valid = handleValidation(_value, validators.current)
-    dispatch(setComponent(id, { value: _value, ...valid }))
-    return valid
+    const current = getComponentState(store.getState(), id, { value: initial, valid: true })
+    const validation = handleValidation(current.value, validators.current)
+    dispatch(setComponent(id, { value: current.value, ...validation }))
+    return validation
   }, [initial])
 
   useEffect(() => {
