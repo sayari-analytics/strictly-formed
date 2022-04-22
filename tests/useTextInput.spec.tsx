@@ -1,7 +1,7 @@
 import React from 'react'
 import { Id, useTextInput, UseTextInputReturn, TextInput, CLEAR_COMPONENT } from '~src'
-import { store, render, act, fireEvent } from '~tests/test-utils'
 import { TextInputProps, handleValidation } from '~src/hooks/useTextInput'
+import { store, render, act, fireEvent } from '~tests/test-utils'
 
 // constants
 const TEST_INPUT_ID = 'TEST_INPUT_ID' as Id<TextInput>
@@ -17,13 +17,13 @@ const setup = (props: TextInputProps = {}) => {
   const hook = {} as {
     value: string
     set: UseTextInputReturn[1]
-    validate: UseTextInputReturn[2]
-    meta: UseTextInputReturn[3]
+    validate: UseTextInputReturn[2]['validate']
+    meta: UseTextInputReturn[2]
   }
 
   function TestInput() {
-    const [value, set, validate, meta] = useTextInput(TEST_INPUT_ID, props)
-    Object.assign(hook, { value, set, validate, meta })
+    const [value, set, meta] = useTextInput(TEST_INPUT_ID, props)
+    Object.assign(hook, { value, set, validate: meta.validate, meta })
 
     const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
       set(event.target.value)

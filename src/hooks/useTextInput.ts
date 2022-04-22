@@ -14,23 +14,19 @@ export type InputValidators = {
 
 export type TextInputProps = InputValidators & { value?: string }
 
-type Meta = {
+export type Meta = {
   id: Id<TextInput>
   valid: boolean
   error?: ValidationError
   ref: React.RefObject<HTMLInputElement>
   exists: boolean
-}
-
-export type UseTextInputReturn = [
-  string,
-  SetHandler<string>,
-  () => {
+  validate: () => {
     valid: boolean
     error?: ValidationError
-  },
-  Meta
-]
+  }
+}
+
+export type UseTextInputReturn = [string, SetHandler<string>, Meta]
 
 export const handleValidation = (
   value: string,
@@ -106,5 +102,5 @@ export const useTextInput = <State extends ReduxState<TextInput>>(
     }
   }, [])
 
-  return [value, set, validate, { id, ref, exists, ...meta }]
+  return [value, set, { id, ref, exists, validate, ...meta }]
 }
