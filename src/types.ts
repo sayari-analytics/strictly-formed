@@ -11,3 +11,11 @@ export type ReduxState<Component = unknown> = {
 export type SetHandler<Component = unknown> = (
   value?: Component | ((state: Component) => Component)
 ) => void
+
+export type ValidationError = 'required' | 'minlength' | 'maxlength' | 'pattern'
+
+export type TextInput = {
+  value: string
+  valid: boolean
+  error?: ValidationError
+}

@@ -1,66 +1,89 @@
-import type { Id, ReduxState, SetHandler } from '~src/types'
+import type { Id, ReduxState, SetHandler, TextInput, ValidationError } from '~src/types'
+import { componentExists, getComponent, getComponentState } from '~src/redux/selectors'
 import { useDispatch, useSelector, useStore } from 'react-redux'
 import { clearComponent, setComponent } from '~src/redux/actions'
-import { getComponentState } from '~src/redux/selectors'
+import { useCallback, useEffect, useRef } from 'react'
 import { useComponentId } from './useComponentId'
-import { useCallback } from 'react'
 
-export type TextInputProps = {
-  value?: string
+export type InputValidators = {
   pattern?: RegExp
   required?: boolean
   length?: [number, number]
+  autofocus?: boolean
 }
 
-export const useTextInput = <State extends ReduxState<string>>(
+export type TextInputProps = InputValidators & { value?: string }
+
+type Meta = {
+  id: Id<TextInput>
+  valid: boolean
+  error?: ValidationError
+  ref: React.MutableRefObject<HTMLInputElement | undefined>
+}
+
+const validate = (
+  value: string,
+  { length: [min, max] = [0, Infinity], required, pattern }: InputValidators
+): {
+  valid: boolean
+  error?: ValidationError
+} => {
+  return value === '' && required
+    ? { valid: false, error: 'required' }
+    : value.length < min
+    ? { valid: false, error: 'minlength' }
+    : value.length > max
+    ? { valid: false, error: 'maxlength' }
+    : pattern && !pattern.test(value)
+    ? { valid: false, error: 'pattern' }
+    : { valid: true }
+}
+
+export const useTextInput = <State extends ReduxState<TextInput>>(
   _id: string,
-  { value: initial = '', length: [min, max] = [0, Infinity], required, pattern }: TextInputProps
-): [
-  string,
-  SetHandler<string>,
-  {
-    id: Id<string>
-    valid: boolean
-    error?: 'required' | 'minlength' | 'maxlength' | 'pattern'
-  }
-] => {
+  { value: initial = '', ...props }: TextInputProps
+): [string, SetHandler<string>, Meta] => {
   const store = useStore()
   const dispatch = useDispatch()
-  const id = useComponentId<string>(_id)
-  const value = useSelector((state: State) => getComponentState(state, id, initial))
+  const ref = useRef<HTMLInputElement>()
+  const id = useComponentId<TextInput>(_id)
+  const validators = useRef<InputValidators>(props)
 
-  const set = useCallback(
-    (target?: string | ((value: string) => string)) => {
+  const { value, ...meta } = useSelector((state: State) =>
+    getComponentState(state, id, { value: initial, valid: true })
+  )
+
+  const set: SetHandler<string> = useCallback(
+    (target) => {
       if (target === undefined) {
-        dispatch(clearComponent<string>(id))
+        dispatch(clearComponent<TextInput>(id))
       } else {
+        const _value =
+          target instanceof Function
+            ? target(getComponent(store.getState(), id)?.value || initial)
+            : target
+
         dispatch(
-          setComponent(
-            id,
-            target instanceof Function
-              ? target(getComponentState(store.getState(), id, initial))
-              : target
-          )
+          setComponent(id, {
+            value: _value,
+            ...validate(_value, validators.current),
+          })
         )
       }
     },
     [initial]
   )
 
-  return [
-    value,
-    set,
-    {
-      id,
-      ...(value === '' && required
-        ? { valid: false, error: 'required' }
-        : value.length < min
-        ? { valid: false, error: 'minlength' }
-        : value.length > max
-        ? { valid: false, error: 'maxlength' }
-        : pattern && !pattern.test(value)
-        ? { valid: false, error: 'pattern' }
-        : { valid: true }),
-    },
-  ]
+  useEffect(() => {
+    if (validators.current.autofocus && ref.current) {
+      ref.current.focus()
+    }
+    return () => {
+      if (componentExists(store.getState(), id)) {
+        dispatch(clearComponent<TextInput>(id))
+      }
+    }
+  }, [])
+
+  return [value, set, { id, ref, ...meta }]
 }
