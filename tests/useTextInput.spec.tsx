@@ -144,6 +144,12 @@ describe('[useTextInput]', () => {
       expect(getState()?.valid).toBe(false)
       expect(getState()?.error).toBe('required')
     })
+
+    test('"validate" handler updates with the correct state when current is falsy', () => {
+      const { validate, input } = setup({ required: true, value: 'initial state' })
+      fireEvent.change(input, { target: { value: '' } })
+      expect(validate()).toEqual({ valid: false, error: 'required' })
+    })
   })
 
   describe('[on unmount]', () => {
