@@ -135,12 +135,12 @@ describe('[useTextInput]', () => {
 
     test('"validate" handler returns truthy without any requirements', () => {
       const { validate } = setup()
-      expect(validate()).toEqual({ valid: true })
+      expect(validate()).toBe(true)
     })
 
     test('"validate" handler updates redux state on validation error', () => {
       const { validate } = setup({ required: true })
-      expect(validate()).toEqual({ valid: false, error: 'required' })
+      expect(validate()).toBe(false)
       expect(getState()?.valid).toBe(false)
       expect(getState()?.error).toBe('required')
     })
@@ -148,7 +148,7 @@ describe('[useTextInput]', () => {
     test('"validate" handler updates with the correct state when current is falsy', () => {
       const { validate, input } = setup({ required: true, value: 'initial state' })
       fireEvent.change(input, { target: { value: '' } })
-      expect(validate()).toEqual({ valid: false, error: 'required' })
+      expect(validate()).toBe(false)
     })
   })
 

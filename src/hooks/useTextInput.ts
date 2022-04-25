@@ -16,14 +16,11 @@ export type TextInputProps = InputValidators & { value?: string }
 
 export type Meta = {
   id: Id<TextInput>
-  valid: boolean
-  error?: ValidationError
   ref: React.RefObject<HTMLInputElement>
+  valid: boolean
   exists: boolean
-  validate: () => {
-    valid: boolean
-    error?: ValidationError
-  }
+  validate: () => boolean
+  error?: ValidationError
 }
 
 export type UseTextInputReturn = [string, SetHandler<string>, Meta]
@@ -55,7 +52,6 @@ export const useTextInput = <State extends ReduxState<TextInput>>(
   const ref = useRef<HTMLInputElement>(null)
   const id = useComponentId<TextInput>(_id)
   const validators = useRef<InputValidators>(props)
-
   const exists = useSelector((state: State) => componentExists(state, id))
   const { value, ...meta } = useSelector((state: State) =>
     getComponentState(state, id, { value: initial, valid: true })
@@ -77,9 +73,9 @@ export const useTextInput = <State extends ReduxState<TextInput>>(
 
   const validate = useCallback(() => {
     const current = getComponentState(store.getState(), id, { value: initial, valid: true })
-    const validation = handleValidation(current.value, validators.current)
-    dispatch(setComponent(id, { value: current.value, ...validation }))
-    return validation
+    const result = handleValidation(current.value, validators.current)
+    dispatch(setComponent(id, { value: current.value, ...result }))
+    return result.valid
   }, [initial])
 
   useEffect(() => {

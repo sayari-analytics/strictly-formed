@@ -21,17 +21,9 @@ const App = () => {
         flexDirection: 'column',
         gap: 16,
       }}>
-      <InputForm
-        required
-        autoFocus
-        id='text_input_example'
-        label='Text Input Example'
-        pattern={EMAIL_REGEX}
-      />
+      <InputForm required autoFocus id='text_input_example' label='Email:' pattern={EMAIL_REGEX} />
 
-      <div style={{ backgroundColor: 'pink' }}>
-        <UserForm id='one' />
-      </div>
+      <UserForm id='one' />
     </div>
   )
 }
