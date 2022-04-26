@@ -1,6 +1,7 @@
-import type { Id, ReduxState, SetHandler } from '~src/types'
+import type { Id, SetHandler } from '~src/types'
 import { componentExists, getComponentState } from '~src/redux/selectors'
-import { useDispatch, useSelector, useStore } from 'react-redux'
+import { useDispatch, useStore } from 'react-redux'
+import { useSelector } from './internal/redux'
 import { clearComponent, setComponent } from '~src/redux/actions'
 import { useCallback, useEffect } from 'react'
 import { useComponentId } from './useComponentId'
@@ -16,20 +17,21 @@ export type UseComponentStateReturn<Component = unknown> = [
   Meta<Component>
 ]
 
-export const useComponentState = <Component, State extends ReduxState<Component>>(
+export const useComponentState = <Component>(
   _id: string,
   initial: Component
 ): UseComponentStateReturn<Component> => {
-  const id = useComponentId<Component>(_id)
-  const store = useStore<State>()
+  const store = useStore()
   const dispatch = useDispatch()
-  const state = useSelector((state: State) => getComponentState(state, id, initial))
-  const exists = useSelector((state: State) => componentExists(state, id))
 
-  const set = useCallback(
-    (value?: Component | ((state: Component) => Component)) => {
+  const id = useComponentId<Component>(_id)
+  const state = useSelector((state) => getComponentState(state, id, initial))
+  const exists = useSelector((state) => componentExists(state, id))
+
+  const set: SetHandler<Component> = useCallback(
+    (value) => {
       if (value === undefined) {
-        dispatch(clearComponent<Component>(id))
+        dispatch(clearComponent(id))
       } else {
         dispatch(
           setComponent(
@@ -47,7 +49,7 @@ export const useComponentState = <Component, State extends ReduxState<Component>
   useEffect(() => {
     return () => {
       if (componentExists(store.getState(), id)) {
-        dispatch(clearComponent<Component>(id))
+        dispatch(clearComponent(id))
       }
     }
   }, [])
