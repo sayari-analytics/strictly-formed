@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
-import { useComponentState } from '~/src'
+import { createId, useComponentState } from '~/src'
 import { createUser } from '~/example/redux/modules/users'
 
 export type SignupFormState = {
@@ -10,7 +10,8 @@ export type SignupFormState = {
   message?: string
 }
 
-const SIGN_UP_FORM = 'SIGN_UP_FORM'
+export const SIGN_UP_FORM = createId<SignupFormState>('SIGN_UP_FORM')
+
 const DEFAULT_STATE: SignupFormState = {
   name: undefined,
   vip: false,
@@ -20,7 +21,7 @@ const DEFAULT_STATE: SignupFormState = {
 export const SignUpForm = () => {
   const dispatch = useDispatch()
 
-  const [state, set, { id }] = useComponentState(SIGN_UP_FORM, DEFAULT_STATE)
+  const [state, set] = useComponentState(SIGN_UP_FORM, DEFAULT_STATE)
 
   const setName = useCallback(
     ({ target: { value } }) => {
@@ -45,9 +46,9 @@ export const SignUpForm = () => {
         message: 'Name can not be undefined',
       }))
     } else {
-      dispatch(createUser(id, state.name, state.vip))
+      dispatch(createUser(state.name, state.vip))
     }
-  }, [dispatch, id, set, state.name, state.vip])
+  }, [dispatch, set, state.name, state.vip])
 
   const clear = useCallback(() => set(), [set])
 

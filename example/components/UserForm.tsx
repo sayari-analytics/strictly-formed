@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useComponentState } from '~/src'
+import { createId, useComponentState } from '~/src'
 import { updateUser, getUser } from '~/example/redux/modules/users'
 import { State } from '~/example/redux/store'
 
@@ -8,15 +8,15 @@ export type Props = { id: string }
 
 export type UserFormState = {
   name: string
-  vip?: boolean
+  vip: boolean
   status: 'complete' | 'pending' | 'error'
   message?: string
 }
 
-const USER_FORM = 'USER_FORM'
+const USER_FORM = createId<UserFormState>('USER_FORM')
 const DEFAULT_STATE: UserFormState = {
   name: '',
-  vip: undefined,
+  vip: false,
   status: 'complete',
 }
 
@@ -27,7 +27,7 @@ export const UserForm = ({ id: user_id }: Props) => {
   /**
    * if any field is undefined in the form, default to the saved value
    */
-  const [{ name, vip, ...form }, set, { id, exists }] = useComponentState(USER_FORM, {
+  const [{ name, vip, ...form }, set, exists] = useComponentState(USER_FORM, {
     ...DEFAULT_STATE,
     ...user,
   })
@@ -48,8 +48,8 @@ export const UserForm = ({ id: user_id }: Props) => {
 
   const clear = useCallback(() => set(), [set])
   const submit = useCallback(() => {
-    dispatch(updateUser(id, name, vip))
-  }, [dispatch, id, name, vip])
+    dispatch(updateUser(name, vip))
+  }, [dispatch, name, vip])
 
   return (
     <>

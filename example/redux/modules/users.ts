@@ -1,9 +1,8 @@
 import { Epic, ofType } from 'redux-observable'
 import { of } from 'rxjs'
 import { catchError, delay, mergeMap, startWith } from 'rxjs/operators'
-import { Id, clearComponent, setComponent, getComponent } from '~/src'
-import { SignupFormState } from '~/example/components/SignUpForm'
-import { UserFormState } from '~/example/components/UserForm'
+import { clearComponent, setComponent, getComponent } from '~/src'
+import { SIGN_UP_FORM } from '~/example/components/SignUpForm'
 import { Action, State } from '../store'
 
 /**
@@ -13,7 +12,6 @@ export type UsersState = { [id: string]: { name: string; vip: boolean } }
 
 export type CreateUserAction = {
   type: typeof CREATE_USER
-  id: Id<SignupFormState>
   name: string
   vip: boolean
 }
@@ -27,7 +25,6 @@ export type CreateUserActionComplete = {
 
 export type UpdateUserAction = {
   type: typeof UPDATE_USER
-  id: Id<UserFormState>
   name: string
   vip: boolean
 }
@@ -61,11 +58,11 @@ export const UPDATE_USER_COMPLETE = 'UPDATE_USER_COMPLETE'
 /**
  * actions
  */
-export const createUser = (
-  id: Id<SignupFormState>,
-  name: string,
-  vip: boolean
-): CreateUserAction => ({ type: CREATE_USER, id, name, vip })
+export const createUser = (name: string, vip: boolean): CreateUserAction => ({
+  type: CREATE_USER,
+  name,
+  vip,
+})
 
 export const createUserComplete = (
   user_id: string,
@@ -78,11 +75,11 @@ export const createUserComplete = (
   vip,
 })
 
-export const updateUser = (
-  id: Id<UserFormState>,
-  name: string,
-  vip: boolean
-): UpdateUserAction => ({ type: UPDATE_USER, id, name, vip })
+export const updateUser = (name: string, vip: boolean): UpdateUserAction => ({
+  type: UPDATE_USER,
+  name,
+  vip,
+})
 
 export const updateUserComplete = (
   user_id: string,
@@ -118,18 +115,18 @@ const api = (_url: string, _method: string, _body: { name: string; vip: boolean 
 export const createUserEpic: Epic<Action, Action, State> = (action$, state$) =>
   action$.pipe(
     ofType<Action, 'CREATE_USER', CreateUserAction>(CREATE_USER),
-    mergeMap(({ id, name, vip }) => {
+    mergeMap(({ name, vip }) => {
       // can read component state programatically from store, if needed
-      const _componentState = getComponent(state$.value, id)
+      const _componentState = getComponent(state$.value, SIGN_UP_FORM)
 
       return api('/signup', 'POST', { name, vip }).pipe(
         mergeMap(({ user_id }) => {
           // on success, add user to redux, show a success message, and clear form after 3 sec
-          return of(clearComponent(id)).pipe(
+          return of(clearComponent(SIGN_UP_FORM)).pipe(
             delay(3000),
             startWith(
               createUserComplete(user_id, name, vip),
-              setComponent(id, {
+              setComponent(SIGN_UP_FORM, {
                 name,
                 vip: false,
                 status: 'complete',
@@ -139,13 +136,13 @@ export const createUserEpic: Epic<Action, Action, State> = (action$, state$) =>
           )
         }),
         // start by setting form to pending
-        startWith(setComponent(id, { name, vip, status: 'pending', message: undefined })),
+        startWith(setComponent(SIGN_UP_FORM, { name, vip, status: 'pending', message: undefined })),
         catchError(() => {
           // on error, show an error message and clear form after 3 sec
-          return of(clearComponent(id)).pipe(
+          return of(clearComponent(SIGN_UP_FORM)).pipe(
             delay(3000),
             startWith(
-              setComponent(id, {
+              setComponent(SIGN_UP_FORM, {
                 vip,
                 name,
                 status: 'error',

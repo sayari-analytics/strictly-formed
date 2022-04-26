@@ -4,27 +4,16 @@ import { useDispatch, useStore } from 'react-redux'
 import { useSelector } from './internal/redux'
 import { clearComponent, setComponent } from '~src/redux/actions'
 import { useCallback, useEffect } from 'react'
-import { useComponentId } from './useComponentId'
-
-export type Meta<Component = unknown> = {
-  exists: boolean
-  id: Id<Component>
-}
-
-export type UseComponentStateReturn<Component = unknown> = [
-  Component,
-  SetHandler<Component>,
-  Meta<Component>
-]
+import { useIdCache } from './useIdCache'
 
 export const useComponentState = <Component>(
-  _id: string,
+  _id: Id<Component>,
   initial: Component
-): UseComponentStateReturn<Component> => {
+): [Component, SetHandler<Component>, boolean] => {
   const store = useStore()
   const dispatch = useDispatch()
 
-  const id = useComponentId<Component>(_id)
+  const id = useIdCache(_id)
   const state = useSelector((state) => getComponentState(state, id, initial))
   const exists = useSelector((state) => componentExists(state, id))
 
@@ -54,5 +43,5 @@ export const useComponentState = <Component>(
     }
   }, [])
 
-  return [state, set, { id, exists }]
+  return [state, set, exists]
 }
