@@ -1,10 +1,9 @@
 import type { Id, SetHandler, TextInput, ValidationError } from '~src/types'
 import { componentExists, getComponentState } from '~src/redux/selectors'
 import { useDispatch, useStore } from 'react-redux'
-import { useSelector } from './internal/redux'
+import { useSelector, useIdCache } from './internal'
 import { clearComponent, setComponent } from '~src/redux/actions'
 import { useCallback, useEffect, useRef } from 'react'
-import { useComponentId } from './useComponentId'
 
 export type InputValidators = {
   pattern?: RegExp
@@ -16,7 +15,6 @@ export type InputValidators = {
 export type TextInputProps = InputValidators & { value?: string }
 
 export type Meta = {
-  id: Id<TextInput>
   ref: React.RefObject<HTMLInputElement>
   valid: boolean
   exists: boolean
@@ -45,13 +43,13 @@ export const handleValidation = (
 }
 
 export const useTextInput = (
-  _id: string,
+  _id: Id<TextInput>,
   { value: initial = '', ...props }: TextInputProps = {}
 ): UseTextInputReturn => {
   const store = useStore()
   const dispatch = useDispatch()
   const ref = useRef<HTMLInputElement>(null)
-  const id = useComponentId<TextInput>(_id)
+  const id = useIdCache(_id)
   const validators = useRef<InputValidators>(props)
   const exists = useSelector((state) => componentExists(state, id))
   const { value, ...meta } = useSelector((state) =>
@@ -99,5 +97,5 @@ export const useTextInput = (
     }
   }, [])
 
-  return [value, set, { id, ref, exists, validate, ...meta }]
+  return [value, set, { ref, exists, validate, ...meta }]
 }

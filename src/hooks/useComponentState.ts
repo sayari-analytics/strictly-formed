@@ -1,10 +1,9 @@
 import type { Id, SetHandler } from '~src/types'
 import { componentExists, getComponentState } from '~src/redux/selectors'
-import { useDispatch, useStore } from 'react-redux'
-import { useSelector } from './internal/redux'
 import { clearComponent, setComponent } from '~src/redux/actions'
+import { useSelector, useIdCache } from './internal'
 import { useCallback, useEffect } from 'react'
-import { useIdCache } from './useIdCache'
+import { useDispatch, useStore } from 'react-redux'
 
 export const useComponentState = <Component>(
   _id: Id<Component>,

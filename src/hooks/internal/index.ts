@@ -1,7 +1,6 @@
+import { useSelector as _useSelector, TypedUseSelectorHook } from 'react-redux'
 import { useEffect, useRef } from 'react'
-import type { Id } from '~src/types'
-
-export const createId = <Component>(id: string) => id as Id<Component>
+import type { Id, ReduxState } from '~src/types'
 
 export const createIdCache = () => {
   const cache = new Set<Id>()
@@ -41,3 +40,4 @@ export const createIdCache = () => {
 }
 
 export const useIdCache = createIdCache()
+export const useSelector: TypedUseSelectorHook<ReduxState> = _useSelector

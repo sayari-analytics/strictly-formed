@@ -1,8 +1,6 @@
 import React from 'react'
-import { useComponentState, UseComponentStateReturn } from '~src/hooks/useComponentState'
-import { CLEAR_COMPONENT, SET_COMPONENT } from '~src'
+import { useComponentState, createId, SetHandler, CLEAR_COMPONENT, SET_COMPONENT } from '~src'
 import { store, render, act } from '~tests/test-utils'
-import { Id } from '~src/types'
 
 type TestState = {
   input: string
@@ -15,17 +13,18 @@ const initialState: TestState = {
   open: false,
 }
 
-const TEST_COMPONENT_STATE = 'TEST_COMPONENT_STATE'
+const TEST_COMPONENT_STATE = createId<TestState>('TEST_COMPONENT_STATE')
+
 const STATE = 0
 const SET = 1
-const META = 2
+const EXISTS = 2
 
 // utils
 const isObject = (value: unknown): value is object =>
   typeof value === 'object' && typeof value !== null
 
 const getState = () => {
-  return store.getState().components[TEST_COMPONENT_STATE as Id<TestState>] as TestState | undefined
+  return store.getState().components[TEST_COMPONENT_STATE] as TestState | undefined
 }
 
 const setup = () => {
@@ -41,7 +40,7 @@ const setup = () => {
   return {
     unmount,
     rerender,
-    props: props as UseComponentStateReturn<TestState>,
+    props: props as [TestState, SetHandler<TestState>, boolean],
   }
 }
 
@@ -65,12 +64,11 @@ describe('[useComponentState]', () => {
     it('returns the initial state exactly as provided', () => {
       expect(isObject(component.props[STATE])).toBe(true)
       expect(component.props[STATE]).toEqual(initialState)
-      expect(component.props[META].id).toEqual(TEST_COMPONENT_STATE)
     })
 
     it('does not dispatch any actions before the "set" handler is invoked', () => {
       expect(store.dispatch).toHaveBeenCalledTimes(0)
-      expect(component.props[META].exists).toBe(false)
+      expect(component.props[EXISTS]).toBe(false)
       expect(getState()).toBeUndefined()
     })
   })
@@ -92,7 +90,7 @@ describe('[useComponentState]', () => {
     })
 
     it('correctly updates state via "set" handler', () => {
-      expect(component.props[META].exists).toBe(true)
+      expect(component.props[EXISTS]).toBe(true)
       expect(store.dispatch).toHaveBeenLastCalledWith({
         id: TEST_COMPONENT_STATE,
         type: SET_COMPONENT,
@@ -121,7 +119,7 @@ describe('[useComponentState]', () => {
         id: TEST_COMPONENT_STATE,
         type: CLEAR_COMPONENT,
       })
-      expect(component.props[META].exists).toBe(false)
+      expect(component.props[EXISTS]).toBe(false)
       expect(getState()).toBeUndefined()
     })
   })

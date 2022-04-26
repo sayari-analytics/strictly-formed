@@ -1,6 +1,6 @@
 import React, { FunctionComponent, useCallback } from 'react'
 import { InputValidators } from '~src/hooks/useTextInput'
-import { useTextInput } from '~src'
+import { createId, TextInput, useTextInput } from '~src'
 import styled from 'styled-components'
 
 type Props = InputValidators & {
@@ -47,7 +47,10 @@ const Button = styled.button`
 `
 
 const InputForm: FunctionComponent<Props> = ({ id, label, placeholder, ...validators }) => {
-  const [value, set, { ref, validate, valid, error }] = useTextInput(id, validators)
+  const [value, set, { ref, validate, valid, error }] = useTextInput(
+    createId<TextInput>(id),
+    validators
+  )
 
   const onChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {

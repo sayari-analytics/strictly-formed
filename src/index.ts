@@ -8,4 +8,4 @@ export { componentStateReducer } from '~src/redux/reducer'
 
 export { useComponentState } from '~src/hooks/useComponentState'
 export { useTextInput } from '~src/hooks/useTextInput'
-export { createId } from '~src/hooks/useIdCache'
+export { createId } from '~src/hooks/createId'
