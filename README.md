@@ -1,6 +1,6 @@
 # Strictly Formed
 
-Component state bindings for redux and statically typed forms for typescript
+Component state bindings for redux and typescript
 
 ### Install
 
@@ -33,47 +33,36 @@ npm install strictly-formed
   )
 ```
 
-### Hooks API
-- state hooks require unique id's. This id will be included in the returned value casted as `Id<Component>`. This allows better typing across selectors.
 
-#### useComponentState
+### useComponentState
 - an unopinionated state hook bound to redux.
 - the interface is modeled after `React.useState`
+- the `createId` utility will generate an ID that is bound to the component type. This will enable you to access the component state from redux without needing type assertions.
 
 ```typescript
-export const useComponentState: <Component>(id: string, initial: Component) => [
+export const useComponentState: <Component>(id: Id<Component>, initial: Component) => [
   Component,
   (value?: Component | ((state: Component) => Component)) => void,
-  {
-    exists: boolean;
-    id: Id<Component>;
-  }
+  boolean
 ]
 ```
 
-#### useTextInput
-- state binding with validation feedback for text inputs
-- for the `autoFocus` feature to work, you must past the provided ref object to the input element
-
+- example:
 ```typescript
-export const useTextInput: (id: string, {
-  value?: string; // initial value
-  pattern?: RegExp;
-  required?: boolean;
-  length?: [number, number]; // [minlength, maxlength]
-  autoFocus?: boolean;
-}) => [
-  string,
-  (value?: string | ((state: string) => string)) => void,
-  {
-    id: Id<TextInput>;
-    ref: React.RefObject<HTMLInputElement>;
-    valid: boolean;
-    exists: boolean;
-    validate: () => boolean;
-    error?: 'required' | 'minlength' | 'maxlength' | 'pattern';
-  }
-]
+import { useComponentState, createId } from 'strictly-formed'
+
+type State = {
+  name: string
+  age?: number
+}
+
+const COMPONENT_ID = createId<State>('COMPONENT_ID')
+
+const Component = (props) => {
+  const [state, set, exists] = useComponentState(COMPONENT_ID, { name: '' })
+  // ...
+}
+
 ```
 
 #### Action Creators
