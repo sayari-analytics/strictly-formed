@@ -7,5 +7,6 @@ export { componentExists, getComponent, getComponentState } from '~src/redux/sel
 export { componentStateReducer } from '~src/redux/reducer'
 
 export { useComponentState } from '~src/hooks/useComponentState'
+export { useStrictForm } from '~src/hooks/useStrictForm'
 export { useTextInput } from '~src/hooks/useTextInput'
-export { createId } from '~src/hooks/createId'
+export { createId, createFormId, createInputId } from '~src/hooks/createId'
