@@ -17,3 +17,13 @@ export type TextInput = {
   valid: boolean
   error?: ValidationError
 }
+
+export type StrictForm<Form extends object> = {
+  form: Form
+  valid: boolean
+  errors: Set<string>
+}
+
+export type ValidationModel<Form extends object> = {
+  [Property in keyof Form]+?: (value: Form[Property]) => string | undefined
+}

@@ -1,10 +1,11 @@
 import React from 'react'
-import { useTextInput, UseTextInputReturn, TextInput, CLEAR_COMPONENT, createId } from '~src'
+import { useTextInput, UseTextInputReturn, TextInput, CLEAR_COMPONENT } from '~src'
+import { createInputId } from '~src/hooks/createId'
 import { TextInputProps, handleValidation } from '~src/hooks/useTextInput'
 import { store, render, act, fireEvent } from '~tests/test-utils'
 
 // constants
-const TEST_INPUT_ID = createId<TextInput>('TEST_INPUT_ID')
+const TEST_INPUT_ID = createInputId('TEST_INPUT_ID')
 
 const EMAIL_REGEX = new RegExp(
   /^[a-zA-Z0-9.!#$%&’*+\/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
