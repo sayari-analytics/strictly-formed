@@ -37,12 +37,12 @@ export const Button = styled.button`
   padding: 6px 12px;
 `
 
-export const Input = styled.input`
+export const Input = styled.input<{ width?: number }>`
   background-color: #fff;
   border: 1px solid #101419;
   border-radius: 6px;
   padding: 6px 12px;
-  width: 200px;
+  width: ${({ width = 200 }) => `${width}px`};
 `
 
 export const Form = styled.form`

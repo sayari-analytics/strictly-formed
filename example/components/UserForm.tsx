@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { createId, useComponentState } from '~/src'
 import { updateUser, getUser } from '~/example/redux/modules/users'
 import { State } from '~/example/redux/store'
+import { Button, FlexRow, Form, Input, Label } from './styled'
 
 export type Props = { id: string }
 
@@ -46,24 +47,40 @@ export const UserForm = ({ id: user_id }: Props) => {
     [set]
   )
 
-  const clear = useCallback(() => set(), [set])
-  const submit = useCallback(() => {
-    dispatch(updateUser(name, vip))
-  }, [dispatch, name, vip])
+  const clear = useCallback(
+    (event: React.SyntheticEvent) => {
+      event.preventDefault()
+      set()
+    },
+    [set]
+  )
+  const submit = useCallback(
+    (event: React.SyntheticEvent) => {
+      event.preventDefault()
+      dispatch(updateUser(name, vip))
+    },
+    [dispatch, name, vip]
+  )
 
   return (
     <>
-      <form onSubmit={submit} style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-        <label>
-          Name:
-          <input type='text' name='name' value={name} onChange={setName} />
-        </label>
-        <input type='checkbox' id='vip' checked={vip} onChange={setVIP} />
-        <label htmlFor='vip'>VIP</label>
-        <button onClick={clear}>Clear</button>
-        {/* disable submit if form doesn't contain new info */}
-        <input type='submit' value='Submit' disabled={!exists} />
-      </form>
+      <Form onSubmit={submit}>
+        <Label htmlFor='name'>
+          <span>Name:</span>
+          <Input type='text' name='name' value={name} onChange={setName} />
+        </Label>
+        <FlexRow>
+          <Label htmlFor='vip'>VIP:</Label>
+          <Input width={25} type='checkbox' id='vip' checked={vip} onChange={setVIP} />
+        </FlexRow>
+        <FlexRow end>
+          <Button onClick={clear}>Clear</Button>
+          {/* disable submit if form doesn't contain new info */}
+          <Button type='submit' disabled={!exists}>
+            Submit
+          </Button>
+        </FlexRow>
+      </Form>
       {form.status === 'pending' && 'loading...'}
       {form.status === 'error' && form.message}
       {form.status === 'complete' && form.message}
