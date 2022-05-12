@@ -1,0 +1,44 @@
+{
+  "root": true,
+  "parser": "@typescript-eslint/parser",
+  "extends": [
+    "plugin:@typescript-eslint/recommended",
+    "plugin:react/recommended",
+    "plugin:react-hooks/recommended",
+    "prettier",
+    "plugin:prettier/recommended"
+  ],
+  "rules": {
+    "prettier/prettier": ["error"],
+    "react-hooks/exhaustive-deps": ["off"],
+    "no-console": ["error"],
+    "eqeqeq": ["error"],
+    "max-len": ["error", {
+      "code": 100,
+      "ignoreStrings": true,
+      "ignoreComments": true
+    }],
+    "@typescript-eslint/member-delimiter-style": ["error", {
+      "multiline": {
+        "delimiter": "none"
+      },
+      "singleline": {
+        "delimiter": "semi"
+      }
+    }],
+    "@typescript-eslint/no-unused-vars": ["error", {
+      "argsIgnorePattern": "^_",
+      "varsIgnorePattern": "^_"
+    }]
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  },
+  "env": {
+    "es6": true,
+    "browser": true,
+    "node": true
+  }
+}

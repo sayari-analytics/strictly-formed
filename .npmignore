@@ -1,0 +1,10 @@
+example/
+src/
+tsconfig.json
+.gitignore
+.vscode/
+.parcel-cache
+.eslintrc
+.eslintignore
+.prettierrc
+.prettierignore

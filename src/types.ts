@@ -1,15 +1,11 @@
-export type Status = 'complete' | 'pending' | 'error';
+declare const idType: unique symbol
 
-export type Literal = string | number | boolean | null | undefined | symbol;
+export type Id<Component = unknown> = string & { readonly [idType]: Component }
 
-export type AbstractForm = { [key: string]: any };
+export type ComponentState = Record<Id, unknown>
 
-export type FormState<Form extends AbstractForm = AbstractForm> = {
-  form?: Form,
-  status: Status,
-  error?: string  
-}
+export type ReduxState = { components: ComponentState }
 
-export type FormStateMap = {
-  [formKey: string]: FormState
-}
+export type SetHandler<Component = unknown> = (
+  value?: Component | ((state: Component) => Component)
+) => void
