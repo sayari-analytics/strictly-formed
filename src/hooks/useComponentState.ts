@@ -2,7 +2,7 @@ import type { Id, SetHandler } from '~src/types'
 import { componentExists, getComponentState } from '~src/redux/selectors'
 import { clearComponent, setComponent } from '~src/redux/actions'
 import { useSelector, useIdCache } from './internal'
-import { useCallback, useEffect } from 'react'
+import { useCallback, useEffect, useRef } from 'react'
 import { useDispatch, useStore } from 'react-redux'
 
 export const useComponentState = <Component>(
@@ -16,6 +16,9 @@ export const useComponentState = <Component>(
   const state = useSelector((state) => getComponentState(state, id, initial))
   const exists = useSelector((state) => componentExists(state, id))
 
+  const _initial = useRef(initial)
+  _initial.current = initial
+
   const set: SetHandler<Component> = useCallback(
     (value) => {
       if (value === undefined) {
@@ -25,13 +28,13 @@ export const useComponentState = <Component>(
           setComponent(
             id,
             value instanceof Function
-              ? value(getComponentState(store.getState(), id, initial))
+              ? value(getComponentState(store.getState(), id, _initial.current))
               : value
           )
         )
       }
     },
-    [initial]
+    [_initial]
   )
 
   useEffect(() => {
