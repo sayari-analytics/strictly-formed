@@ -30,8 +30,8 @@
     "form"
   ],
   "peerDependencies": {
-    "react": "^17.0.0",
-    "react-dom": "^17.0.2",
+    "react": ">=17.0",
+    "react-dom": ">=17.0",
     "react-redux": "^7.2.8",
     "redux": "^4.1.2"
   },
