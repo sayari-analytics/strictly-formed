@@ -107,6 +107,20 @@ export const componentExists: <Component>(state: State, id: Id<Component>) => bo
 ```
 
 
+#### Dev Server
+- you can manually reset the id cache to resolve verbose "duplicate id warnings" caused by hot module reloading
+
+add this snippet to your code
+```
+import { cache } from 'strictly-formed'
+
+if (module.hot) {
+  module.dispose(() => {
+    cache.reset()
+  })
+}
+```
+
 ### License
 
 [ISC](https://opensource.org/licenses/ISC)

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import ReactDOM from 'react-dom'
 import React from 'react'
 import { Provider } from 'react-redux'
