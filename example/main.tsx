@@ -5,6 +5,7 @@ import { Provider } from 'react-redux'
 import { UserForm } from './components/UserForm'
 import { store } from './redux/store'
 import styled from 'styled-components'
+import { cache } from '~src'
 
 const Container = styled.div`
   width: 100vw;
@@ -30,3 +31,9 @@ ReactDOM.render(
   </React.StrictMode>,
   document.getElementById('root')
 )
+
+if (module.hot) {
+  module.hot.dispose(() => {
+    cache.reset()
+  })
+}

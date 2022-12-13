@@ -7,3 +7,5 @@ export { componentStateReducer } from '~src/redux/reducer'
 
 export { useComponentState } from '~src/hooks/useComponentState'
 export { createId } from '~src/hooks/createId'
+
+export { default as cache } from '~src/cache'
