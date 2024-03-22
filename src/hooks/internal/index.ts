@@ -7,13 +7,8 @@ export const createIdCache = () => {
 
   const cacheId = <Component>(id: Id<Component>) => {
     if (cache.has(id)) {
-      const error = new Error(`
-      strictly-formed | ERROR: "duplicate id"
-        the id "${id}" is already in use.
-        please use unique ids.
-      `)
       // eslint-disable-next-line no-console
-      console.error(error.message)
+      console.warn(`strictly-formed | the id "${id}" is already in use.`)
     } else {
       cache.add(id)
     }
